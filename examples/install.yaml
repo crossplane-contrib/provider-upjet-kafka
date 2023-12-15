@@ -3,4 +3,4 @@ kind: Provider
 metadata:
   name: provider-kafka
 spec:
-  package: mbbush/provider-kafka:v0.1.0
+  package: mbbush/provider-kafka-jet:v0.1.0

@@ -1,4 +1,4 @@
-module github.com/mbbush/provider-kafka
+module github.com/mbbush/provider-kafka-jet
 
 go 1.19
 

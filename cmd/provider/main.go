@@ -26,12 +26,12 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/cache"
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
 
-	"github.com/mbbush/provider-kafka/apis"
-	"github.com/mbbush/provider-kafka/apis/v1alpha1"
-	"github.com/mbbush/provider-kafka/config"
-	"github.com/mbbush/provider-kafka/internal/clients"
-	"github.com/mbbush/provider-kafka/internal/controller"
-	"github.com/mbbush/provider-kafka/internal/features"
+	"github.com/mbbush/provider-kafka-jet/apis"
+	"github.com/mbbush/provider-kafka-jet/apis/v1alpha1"
+	"github.com/mbbush/provider-kafka-jet/config"
+	"github.com/mbbush/provider-kafka-jet/internal/clients"
+	"github.com/mbbush/provider-kafka-jet/internal/controller"
+	"github.com/mbbush/provider-kafka-jet/internal/features"
 )
 
 func main() {

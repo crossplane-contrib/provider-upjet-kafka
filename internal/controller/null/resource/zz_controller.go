@@ -23,8 +23,8 @@ import (
 	"github.com/crossplane/upjet/pkg/terraform"
 	ctrl "sigs.k8s.io/controller-runtime"
 
-	v1alpha1 "github.com/mbbush/provider-kafka/apis/null/v1alpha1"
-	features "github.com/mbbush/provider-kafka/internal/features"
+	v1alpha1 "github.com/mbbush/provider-kafka-jet/apis/null/v1alpha1"
+	features "github.com/mbbush/provider-kafka-jet/internal/features"
 )
 
 // Setup adds a controller that reconciles Resource managed resources.

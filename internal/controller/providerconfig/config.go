@@ -11,7 +11,7 @@ import (
 	"github.com/crossplane/upjet/pkg/controller"
 	ctrl "sigs.k8s.io/controller-runtime"
 
-	"github.com/mbbush/provider-kafka/apis/v1beta1"
+	"github.com/mbbush/provider-kafka-jet/apis/v1beta1"
 )
 
 // Setup adds a controller that reconciles ProviderConfigs by accounting for

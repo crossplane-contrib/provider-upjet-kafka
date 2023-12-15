@@ -10,12 +10,12 @@ import (
 
 	ujconfig "github.com/crossplane/upjet/pkg/config"
 
-	"github.com/mbbush/provider-kafka/config/null"
+	"github.com/mbbush/provider-kafka-jet/config/null"
 )
 
 const (
 	resourcePrefix = "kafka"
-	modulePath     = "github.com/mbbush/provider-kafka"
+	modulePath     = "github.com/mbbush/provider-kafka-jet"
 )
 
 //go:embed schema.json

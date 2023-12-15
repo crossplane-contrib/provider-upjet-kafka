@@ -15,7 +15,7 @@ import (
 
 	"github.com/crossplane/upjet/pkg/terraform"
 
-	"github.com/mbbush/provider-kafka/apis/v1beta1"
+	"github.com/mbbush/provider-kafka-jet/apis/v1beta1"
 )
 
 const (

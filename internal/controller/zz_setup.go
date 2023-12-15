@@ -9,8 +9,8 @@ import (
 
 	"github.com/crossplane/upjet/pkg/controller"
 
-	resource "github.com/mbbush/provider-kafka/internal/controller/null/resource"
-	providerconfig "github.com/mbbush/provider-kafka/internal/controller/providerconfig"
+	resource "github.com/mbbush/provider-kafka-jet/internal/controller/null/resource"
+	providerconfig "github.com/mbbush/provider-kafka-jet/internal/controller/providerconfig"
 )
 
 // Setup creates all controllers with the supplied logger and adds them to
