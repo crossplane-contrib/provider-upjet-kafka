@@ -1,6 +1,6 @@
 # Provider Kafka
 
-`provider-kafka` is a [Crossplane](https://crossplane.io/) provider that
+`provider-kafka-jet` is a [Crossplane](https://crossplane.io/) provider that
 is built using [Upjet](https://github.com/crossplane/upjet) code
 generation tools and exposes XRM-conformant managed resources for the
 Kafka API.
@@ -19,7 +19,7 @@ cat <<EOF | kubectl apply -f -
 apiVersion: pkg.crossplane.io/v1
 kind: Provider
 metadata:
-  name: provider-kafka
+  name: provider-kafka-jet
 spec:
   package: mbbush/provider-kafka-jet:v0.1.0
 EOF
