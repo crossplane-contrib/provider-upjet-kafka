@@ -4,18 +4,18 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.13.0
-  name: resources.null.kafka.upbound.io
+  name: quotas.kafka.jet.crossplane.io
 spec:
-  group: null.kafka.upbound.io
+  group: kafka.jet.crossplane.io
   names:
     categories:
     - crossplane
     - managed
     - kafka
-    kind: Resource
-    listKind: ResourceList
-    plural: resources
-    singular: resource
+    kind: Quota
+    listKind: QuotaList
+    plural: quotas
+    singular: quota
   scope: Cluster
   versions:
   - additionalPrinterColumns:
@@ -34,10 +34,7 @@ spec:
     name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: Resource is the Schema for the Resources API. The null_resource
-          resource implements the standard resource lifecycle but takes no further
-          action. The triggers argument allows specifying an arbitrary set of values
-          that, when changed, will cause the resource to be replaced.
+        description: Quota is the Schema for the Quotas API. <no value>
         properties:
           apiVersion:
             description: 'APIVersion defines the versioned schema of this representation
@@ -52,7 +49,7 @@ spec:
           metadata:
             type: object
           spec:
-            description: ResourceSpec defines the desired state of Resource
+            description: QuotaSpec defines the desired state of Quota
             properties:
               deletionPolicy:
                 default: Delete
@@ -69,13 +66,17 @@ spec:
                 type: string
               forProvider:
                 properties:
-                  triggers:
+                  config:
                     additionalProperties:
-                      type: string
-                    description: A map of arbitrary strings that, when changed, will
-                      force the null resource to be replaced, re-running any associated
-                      provisioners.
+                      type: number
+                    description: A map of string k/v properties.
                     type: object
+                  entityName:
+                    description: The name of the entity
+                    type: string
+                  entityType:
+                    description: The type of the entity (client-id, user, ip)
+                    type: string
                 type: object
               initProvider:
                 description: THIS IS A BETA FIELD. It will be honored unless the Management
@@ -89,13 +90,17 @@ spec:
                   for example because of an external controller is managing them,
                   like an autoscaler.
                 properties:
-                  triggers:
+                  config:
                     additionalProperties:
-                      type: string
-                    description: A map of arbitrary strings that, when changed, will
-                      force the null resource to be replaced, re-running any associated
-                      provisioners.
+                      type: number
+                    description: A map of string k/v properties.
                     type: object
+                  entityName:
+                    description: The name of the entity
+                    type: string
+                  entityType:
+                    description: The type of the entity (client-id, user, ip)
+                    type: string
                 type: object
               managementPolicies:
                 default:
@@ -257,20 +262,33 @@ spec:
             required:
             - forProvider
             type: object
+            x-kubernetes-validations:
+            - message: spec.forProvider.entityName is a required parameter
+              rule: '!(''*'' in self.managementPolicies || ''Create'' in self.managementPolicies
+                || ''Update'' in self.managementPolicies) || has(self.forProvider.entityName)
+                || (has(self.initProvider) && has(self.initProvider.entityName))'
+            - message: spec.forProvider.entityType is a required parameter
+              rule: '!(''*'' in self.managementPolicies || ''Create'' in self.managementPolicies
+                || ''Update'' in self.managementPolicies) || has(self.forProvider.entityType)
+                || (has(self.initProvider) && has(self.initProvider.entityType))'
           status:
-            description: ResourceStatus defines the observed state of Resource.
+            description: QuotaStatus defines the observed state of Quota.
             properties:
               atProvider:
                 properties:
+                  config:
+                    additionalProperties:
+                      type: number
+                    description: A map of string k/v properties.
+                    type: object
+                  entityName:
+                    description: The name of the entity
+                    type: string
+                  entityType:
+                    description: The type of the entity (client-id, user, ip)
+                    type: string
                   id:
                     type: string
-                  triggers:
-                    additionalProperties:
-                      type: string
-                    description: A map of arbitrary strings that, when changed, will
-                      force the null resource to be replaced, re-running any associated
-                      provisioners.
-                    type: object
                 type: object
               conditions:
                 description: Conditions of the resource.

@@ -1,36 +1,48 @@
-name: hashicorp/null
+name: Mongey/kafka
 resources:
-    null_resource:
+    kafka_acl Resource - terraform-provider-kafka:
         subCategory: ""
-        description: The null_resource resource implements the standard resource lifecycle but takes no further action. The triggers argument allows specifying an arbitrary set of values that, when changed, will cause the resource to be replaced.
-        name: null_resource
-        title: null_resource Resource - terraform-provider-null
-        examples:
-            - name: cluster
-              manifest: |-
-                {
-                  "connection": [
-                    {
-                      "host": "${element(aws_instance.cluster.*.public_ip, 0)}"
-                    }
-                  ],
-                  "provisioner": {
-                    "remote-exec": [
-                      {
-                        "inline": [
-                          "bootstrap-cluster.sh ${join(\" \", aws_instance.cluster.*.private_ip)}"
-                        ]
-                      }
-                    ]
-                  },
-                  "triggers": {
-                    "cluster_instance_ids": "${join(\",\", aws_instance.cluster.*.id)}"
-                  }
-                }
-              dependencies:
-                aws_instance.cluster: |-
-                    {
-                      "count": 3
-                    }
-        argumentDocs: {}
+        name: kafka_acl Resource - terraform-provider-kafka
+        title: kafka_acl Resource - terraform-provider-kafka
+        argumentDocs:
+            acl_host: (String)
+            acl_operation: (String)
+            acl_permission_type: (String)
+            acl_principal: (String)
+            id: (String) The ID of this resource.
+            resource_name: (String) The name of the resource
+            resource_pattern_type_filter: (String)
+            resource_type: (String)
+        importStatements: []
+    kafka_quota Resource - terraform-provider-kafka:
+        subCategory: ""
+        name: kafka_quota Resource - terraform-provider-kafka
+        title: kafka_quota Resource - terraform-provider-kafka
+        argumentDocs:
+            config: (Map of Number) A map of string k/v properties.
+            entity_name: (String) The name of the entity
+            entity_type: (String) The type of the entity (client-id, user, ip)
+            id: (String) The ID of this resource.
+        importStatements: []
+    kafka_topic Resource - terraform-provider-kafka:
+        subCategory: ""
+        name: kafka_topic Resource - terraform-provider-kafka
+        title: kafka_topic Resource - terraform-provider-kafka
+        argumentDocs:
+            config: (Map of String) A map of string k/v attributes.
+            id: (String) The ID of this resource.
+            name: (String) The name of the topic.
+            partitions: (Number) Number of partitions.
+            replication_factor: (Number) Number of replicas.
+        importStatements: []
+    kafka_user_scram_credential Resource - terraform-provider-kafka:
+        subCategory: ""
+        name: kafka_user_scram_credential Resource - terraform-provider-kafka
+        title: kafka_user_scram_credential Resource - terraform-provider-kafka
+        argumentDocs:
+            id: (String) The ID of this resource.
+            password: (String, Sensitive) The password of the credential
+            scram_iterations: (Number) The number of SCRAM iterations used when generating the credential
+            scram_mechanism: (String) The SCRAM mechanism used to generate the credential (SCRAM-SHA-256, SCRAM-SHA-512)
+            username: (String) The name of the credential
         importStatements: []
