@@ -9,8 +9,12 @@ import "github.com/crossplane/upjet/pkg/config"
 // ExternalNameConfigs contains all external name configurations for this
 // provider.
 var ExternalNameConfigs = map[string]config.ExternalName{
-	// Import requires using a randomly generated ID from provider: nl-2e21sda
-	"null_resource": config.IdentifierFromProvider,
+	// Don't rely on metadata.name as the name of the topic, because managed resources are cluster-scoped
+	// so MRs for topics on multiple clusters could have a name collision.
+	"kafka_topic": config.TemplatedStringAsIdentifier("", "{{ .parameters.name }}"),
+	"kafka_acl":   config.TemplatedStringAsIdentifier("", "{{ .parameters.acl_principal }}|{{ .parameters.acl_host }}|{{ .parameters.acl_operation }}|{{ .parameters.acl_permission_type }}|{{ .parameters.resource_type }}|{{ .parameters.resource_name }}|{{ .parameters.resource_pattern_type_filter }}"),
+	// I don't know what the id is. Let's find out.
+	"kafka_quota": config.IdentifierFromProvider,
 }
 
 // ExternalNameConfigurations applies all external name configs listed in the
