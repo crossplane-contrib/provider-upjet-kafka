@@ -4,14 +4,14 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.13.0
-  name: providerconfigs.template.upbound.io
+  name: providerconfigs.kafka.upbound.io
 spec:
-  group: template.upbound.io
+  group: kafka.upbound.io
   names:
     categories:
     - crossplane
     - provider
-    - template
+    - kafka
     kind: ProviderConfig
     listKind: ProviderConfigList
     plural: providerconfigs
@@ -29,7 +29,7 @@ spec:
     name: v1beta1
     schema:
       openAPIV3Schema:
-        description: A ProviderConfig configures a Template provider.
+        description: A ProviderConfig configures a Kafka provider.
         properties:
           apiVersion:
             description: 'APIVersion defines the versioned schema of this representation
