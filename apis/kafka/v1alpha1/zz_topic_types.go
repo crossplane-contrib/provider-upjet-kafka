@@ -20,6 +20,7 @@ import (
 type TopicInitParameters struct {
 
 	// A map of string k/v attributes.
+	// +mapType=granular
 	Config map[string]*string `json:"config,omitempty" tf:"config,omitempty"`
 
 	// Number of partitions.
@@ -32,6 +33,7 @@ type TopicInitParameters struct {
 type TopicObservation struct {
 
 	// A map of string k/v attributes.
+	// +mapType=granular
 	Config map[string]*string `json:"config,omitempty" tf:"config,omitempty"`
 
 	ID *string `json:"id,omitempty" tf:"id,omitempty"`
@@ -50,6 +52,7 @@ type TopicParameters struct {
 
 	// A map of string k/v attributes.
 	// +kubebuilder:validation:Optional
+	// +mapType=granular
 	Config map[string]*string `json:"config,omitempty" tf:"config,omitempty"`
 
 	// The name of the topic.

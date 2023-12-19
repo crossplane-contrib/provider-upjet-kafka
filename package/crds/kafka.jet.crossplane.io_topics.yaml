@@ -71,6 +71,7 @@ spec:
                       type: string
                     description: A map of string k/v attributes.
                     type: object
+                    x-kubernetes-map-type: granular
                   name:
                     description: The name of the topic.
                     type: string
@@ -100,6 +101,7 @@ spec:
                       type: string
                     description: A map of string k/v attributes.
                     type: object
+                    x-kubernetes-map-type: granular
                   partitions:
                     description: Number of partitions.
                     type: number
@@ -286,6 +288,7 @@ spec:
                       type: string
                     description: A map of string k/v attributes.
                     type: object
+                    x-kubernetes-map-type: granular
                   id:
                     type: string
                   name:
