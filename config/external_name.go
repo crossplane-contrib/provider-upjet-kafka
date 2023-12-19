@@ -23,11 +23,18 @@ var ExternalNameConfigs = map[string]config.ExternalName{
 
 func GroupKindOverrides() config.ResourceOption {
 	return func(r *config.Resource) {
-		fmt.Println(r, r.Name, r.ShortGroup, r.Kind, r.Path, r.UseAsync)
 		if r.Name == "kafka_user_scram_credential" {
 			r.ShortGroup = "kafka"
 			r.Kind = "UserScramCredential"
 		}
+	}
+}
+
+// NoAsync disables the async-by-default behavior of upjet. Unlike many resources in cloud providers, Kafka resources
+// are fast to create. None of them need to be done asynchronously.
+func NoAsync() config.ResourceOption {
+	return func(r *config.Resource) {
+		r.UseAsync = false
 	}
 }
 
