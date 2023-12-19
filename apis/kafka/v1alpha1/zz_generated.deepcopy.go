@@ -258,18 +258,9 @@ func (in *QuotaInitParameters) DeepCopyInto(out *QuotaInitParameters) {
 	*out = *in
 	if in.Config != nil {
 		in, out := &in.Config, &out.Config
-		*out = make(map[string]*float64, len(*in))
+		*out = make(map[string]float64, len(*in))
 		for key, val := range *in {
-			var outVal *float64
-			if val == nil {
-				(*out)[key] = nil
-			} else {
-				inVal := (*in)[key]
-				in, out := &inVal, &outVal
-				*out = new(float64)
-				**out = **in
-			}
-			(*out)[key] = outVal
+			(*out)[key] = val
 		}
 	}
 	if in.EntityName != nil {
@@ -331,18 +322,9 @@ func (in *QuotaObservation) DeepCopyInto(out *QuotaObservation) {
 	*out = *in
 	if in.Config != nil {
 		in, out := &in.Config, &out.Config
-		*out = make(map[string]*float64, len(*in))
+		*out = make(map[string]float64, len(*in))
 		for key, val := range *in {
-			var outVal *float64
-			if val == nil {
-				(*out)[key] = nil
-			} else {
-				inVal := (*in)[key]
-				in, out := &inVal, &outVal
-				*out = new(float64)
-				**out = **in
-			}
-			(*out)[key] = outVal
+			(*out)[key] = val
 		}
 	}
 	if in.EntityName != nil {
@@ -377,18 +359,9 @@ func (in *QuotaParameters) DeepCopyInto(out *QuotaParameters) {
 	*out = *in
 	if in.Config != nil {
 		in, out := &in.Config, &out.Config
-		*out = make(map[string]*float64, len(*in))
+		*out = make(map[string]float64, len(*in))
 		for key, val := range *in {
-			var outVal *float64
-			if val == nil {
-				(*out)[key] = nil
-			} else {
-				inVal := (*in)[key]
-				in, out := &inVal, &outVal
-				*out = new(float64)
-				**out = **in
-			}
-			(*out)[key] = outVal
+			(*out)[key] = val
 		}
 	}
 	if in.EntityName != nil {
@@ -480,28 +453,19 @@ func (in *TopicInitParameters) DeepCopyInto(out *TopicInitParameters) {
 	*out = *in
 	if in.Config != nil {
 		in, out := &in.Config, &out.Config
-		*out = make(map[string]*string, len(*in))
+		*out = make(map[string]string, len(*in))
 		for key, val := range *in {
-			var outVal *string
-			if val == nil {
-				(*out)[key] = nil
-			} else {
-				inVal := (*in)[key]
-				in, out := &inVal, &outVal
-				*out = new(string)
-				**out = **in
-			}
-			(*out)[key] = outVal
+			(*out)[key] = val
 		}
 	}
 	if in.Partitions != nil {
 		in, out := &in.Partitions, &out.Partitions
-		*out = new(float64)
+		*out = new(int64)
 		**out = **in
 	}
 	if in.ReplicationFactor != nil {
 		in, out := &in.ReplicationFactor, &out.ReplicationFactor
-		*out = new(float64)
+		*out = new(int64)
 		**out = **in
 	}
 }
@@ -553,18 +517,9 @@ func (in *TopicObservation) DeepCopyInto(out *TopicObservation) {
 	*out = *in
 	if in.Config != nil {
 		in, out := &in.Config, &out.Config
-		*out = make(map[string]*string, len(*in))
+		*out = make(map[string]string, len(*in))
 		for key, val := range *in {
-			var outVal *string
-			if val == nil {
-				(*out)[key] = nil
-			} else {
-				inVal := (*in)[key]
-				in, out := &inVal, &outVal
-				*out = new(string)
-				**out = **in
-			}
-			(*out)[key] = outVal
+			(*out)[key] = val
 		}
 	}
 	if in.ID != nil {
@@ -579,12 +534,12 @@ func (in *TopicObservation) DeepCopyInto(out *TopicObservation) {
 	}
 	if in.Partitions != nil {
 		in, out := &in.Partitions, &out.Partitions
-		*out = new(float64)
+		*out = new(int64)
 		**out = **in
 	}
 	if in.ReplicationFactor != nil {
 		in, out := &in.ReplicationFactor, &out.ReplicationFactor
-		*out = new(float64)
+		*out = new(int64)
 		**out = **in
 	}
 }
@@ -604,18 +559,9 @@ func (in *TopicParameters) DeepCopyInto(out *TopicParameters) {
 	*out = *in
 	if in.Config != nil {
 		in, out := &in.Config, &out.Config
-		*out = make(map[string]*string, len(*in))
+		*out = make(map[string]string, len(*in))
 		for key, val := range *in {
-			var outVal *string
-			if val == nil {
-				(*out)[key] = nil
-			} else {
-				inVal := (*in)[key]
-				in, out := &inVal, &outVal
-				*out = new(string)
-				**out = **in
-			}
-			(*out)[key] = outVal
+			(*out)[key] = val
 		}
 	}
 	if in.Name != nil {
@@ -625,12 +571,12 @@ func (in *TopicParameters) DeepCopyInto(out *TopicParameters) {
 	}
 	if in.Partitions != nil {
 		in, out := &in.Partitions, &out.Partitions
-		*out = new(float64)
+		*out = new(int64)
 		**out = **in
 	}
 	if in.ReplicationFactor != nil {
 		in, out := &in.ReplicationFactor, &out.ReplicationFactor
-		*out = new(float64)
+		*out = new(int64)
 		**out = **in
 	}
 }

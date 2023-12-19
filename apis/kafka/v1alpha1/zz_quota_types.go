@@ -20,8 +20,7 @@ import (
 type QuotaInitParameters struct {
 
 	// A map of string k/v properties.
-	// +mapType=granular
-	Config map[string]*float64 `json:"config,omitempty" tf:"config,omitempty"`
+	Config map[string]float64 `json:"config,omitempty" tf:"config,omitempty"`
 
 	// The name of the entity
 	EntityName *string `json:"entityName,omitempty" tf:"entity_name,omitempty"`
@@ -33,8 +32,7 @@ type QuotaInitParameters struct {
 type QuotaObservation struct {
 
 	// A map of string k/v properties.
-	// +mapType=granular
-	Config map[string]*float64 `json:"config,omitempty" tf:"config,omitempty"`
+	Config map[string]float64 `json:"config,omitempty" tf:"config,omitempty"`
 
 	// The name of the entity
 	EntityName *string `json:"entityName,omitempty" tf:"entity_name,omitempty"`
@@ -49,8 +47,7 @@ type QuotaParameters struct {
 
 	// A map of string k/v properties.
 	// +kubebuilder:validation:Optional
-	// +mapType=granular
-	Config map[string]*float64 `json:"config,omitempty" tf:"config,omitempty"`
+	Config map[string]float64 `json:"config,omitempty" tf:"config,omitempty"`
 
 	// The name of the entity
 	// +kubebuilder:validation:Optional

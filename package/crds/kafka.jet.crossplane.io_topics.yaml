@@ -71,16 +71,17 @@ spec:
                       type: string
                     description: A map of string k/v attributes.
                     type: object
-                    x-kubernetes-map-type: granular
                   name:
                     description: The name of the topic.
                     type: string
                   partitions:
                     description: Number of partitions.
-                    type: number
+                    format: int64
+                    type: integer
                   replicationFactor:
                     description: Number of replicas.
-                    type: number
+                    format: int64
+                    type: integer
                 required:
                 - name
                 type: object
@@ -101,13 +102,14 @@ spec:
                       type: string
                     description: A map of string k/v attributes.
                     type: object
-                    x-kubernetes-map-type: granular
                   partitions:
                     description: Number of partitions.
-                    type: number
+                    format: int64
+                    type: integer
                   replicationFactor:
                     description: Number of replicas.
-                    type: number
+                    format: int64
+                    type: integer
                 type: object
               managementPolicies:
                 default:
@@ -288,7 +290,6 @@ spec:
                       type: string
                     description: A map of string k/v attributes.
                     type: object
-                    x-kubernetes-map-type: granular
                   id:
                     type: string
                   name:
@@ -296,10 +297,12 @@ spec:
                     type: string
                   partitions:
                     description: Number of partitions.
-                    type: number
+                    format: int64
+                    type: integer
                   replicationFactor:
                     description: Number of replicas.
-                    type: number
+                    format: int64
+                    type: integer
                 type: object
               conditions:
                 description: Conditions of the resource.

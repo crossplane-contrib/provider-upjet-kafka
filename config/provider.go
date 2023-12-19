@@ -8,6 +8,7 @@ import (
 	// Note(turkenh): we are importing this to embed provider schema document
 	_ "embed"
 
+	"github.com/Mongey/terraform-provider-kafka/kafka"
 	ujconfig "github.com/crossplane/upjet/pkg/config"
 )
 
@@ -26,8 +27,10 @@ var providerMetadata string
 func GetProvider() *ujconfig.Provider {
 	pc := ujconfig.NewProvider([]byte(providerSchema), resourcePrefix, modulePath, []byte(providerMetadata),
 		ujconfig.WithRootGroup("jet.crossplane.io"),
-		ujconfig.WithIncludeList(ExternalNameConfigured()),
+		//ujconfig.WithIncludeList(ExternalNameConfigured()),
+		ujconfig.WithNoForkIncludeList(ExternalNameConfigured()),
 		ujconfig.WithFeaturesPackage("internal/features"),
+		ujconfig.WithTerraformProvider(kafka.Provider()),
 		ujconfig.WithDefaultResourceOptions(
 			ExternalNameConfigurations(),
 		))

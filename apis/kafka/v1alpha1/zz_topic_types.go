@@ -20,21 +20,19 @@ import (
 type TopicInitParameters struct {
 
 	// A map of string k/v attributes.
-	// +mapType=granular
-	Config map[string]*string `json:"config,omitempty" tf:"config,omitempty"`
+	Config map[string]string `json:"config,omitempty" tf:"config,omitempty"`
 
 	// Number of partitions.
-	Partitions *float64 `json:"partitions,omitempty" tf:"partitions,omitempty"`
+	Partitions *int64 `json:"partitions,omitempty" tf:"partitions,omitempty"`
 
 	// Number of replicas.
-	ReplicationFactor *float64 `json:"replicationFactor,omitempty" tf:"replication_factor,omitempty"`
+	ReplicationFactor *int64 `json:"replicationFactor,omitempty" tf:"replication_factor,omitempty"`
 }
 
 type TopicObservation struct {
 
 	// A map of string k/v attributes.
-	// +mapType=granular
-	Config map[string]*string `json:"config,omitempty" tf:"config,omitempty"`
+	Config map[string]string `json:"config,omitempty" tf:"config,omitempty"`
 
 	ID *string `json:"id,omitempty" tf:"id,omitempty"`
 
@@ -42,18 +40,17 @@ type TopicObservation struct {
 	Name *string `json:"name,omitempty" tf:"name,omitempty"`
 
 	// Number of partitions.
-	Partitions *float64 `json:"partitions,omitempty" tf:"partitions,omitempty"`
+	Partitions *int64 `json:"partitions,omitempty" tf:"partitions,omitempty"`
 
 	// Number of replicas.
-	ReplicationFactor *float64 `json:"replicationFactor,omitempty" tf:"replication_factor,omitempty"`
+	ReplicationFactor *int64 `json:"replicationFactor,omitempty" tf:"replication_factor,omitempty"`
 }
 
 type TopicParameters struct {
 
 	// A map of string k/v attributes.
 	// +kubebuilder:validation:Optional
-	// +mapType=granular
-	Config map[string]*string `json:"config,omitempty" tf:"config,omitempty"`
+	Config map[string]string `json:"config,omitempty" tf:"config,omitempty"`
 
 	// The name of the topic.
 	// +kubebuilder:validation:Required
@@ -61,11 +58,11 @@ type TopicParameters struct {
 
 	// Number of partitions.
 	// +kubebuilder:validation:Optional
-	Partitions *float64 `json:"partitions,omitempty" tf:"partitions,omitempty"`
+	Partitions *int64 `json:"partitions,omitempty" tf:"partitions,omitempty"`
 
 	// Number of replicas.
 	// +kubebuilder:validation:Optional
-	ReplicationFactor *float64 `json:"replicationFactor,omitempty" tf:"replication_factor,omitempty"`
+	ReplicationFactor *int64 `json:"replicationFactor,omitempty" tf:"replication_factor,omitempty"`
 }
 
 // TopicSpec defines the desired state of Topic

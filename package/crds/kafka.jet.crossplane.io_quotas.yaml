@@ -71,7 +71,6 @@ spec:
                       type: number
                     description: A map of string k/v properties.
                     type: object
-                    x-kubernetes-map-type: granular
                   entityName:
                     description: The name of the entity
                     type: string
@@ -96,7 +95,6 @@ spec:
                       type: number
                     description: A map of string k/v properties.
                     type: object
-                    x-kubernetes-map-type: granular
                   entityName:
                     description: The name of the entity
                     type: string
@@ -283,7 +281,6 @@ spec:
                       type: number
                     description: A map of string k/v properties.
                     type: object
-                    x-kubernetes-map-type: granular
                   entityName:
                     description: The name of the entity
                     type: string
