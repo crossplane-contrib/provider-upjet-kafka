@@ -57,16 +57,28 @@ func TerraformSetupBuilder(version, providerSource, providerVersion string) terr
 		if err != nil {
 			return ps, errors.Wrap(err, errExtractCredentials)
 		}
-		creds := map[string]string{}
+		creds := map[string]any{}
 		if err := json.Unmarshal(data, &creds); err != nil {
 			return ps, errors.Wrap(err, errUnmarshalCredentials)
 		}
 
 		// Set credentials in Terraform provider configuration.
 		/*ps.Configuration = map[string]any{
-			"username": creds["username"],
-			"password": creds["password"],
+			"bootstrap_servers": creds["bootstrapServers"],
+			"ca_cert":          creds["caCert"],
+			"client_cert":          creds["clientCert"],
+			"client_key":          creds["clientKey"],
+			"client_key_passphrase":          creds["clientKeyPassphrase"],
+			"tls_enabled": creds["tlsEnabled"],
+			"skip_tls_verify": creds["skipTlsVerify"],
+			"sasl_username": creds["saslUsername"],
+			"sasl_password": creds["saslPassword"],
+			"sasl_mechanism": creds["saslMechanism"],
+
 		}*/
+		// This Crossplane provider config schema exactly matches the schema of the terraform provider config.
+		// See https://github.com/Mongey/terraform-provider-kafka#provider-configuration
+		ps.Configuration = creds
 		return ps, nil
 	}
 }

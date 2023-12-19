@@ -1,0 +1,9 @@
+apiVersion: kafka.jet.crossplane.io/v1alpha1
+kind: Topic
+metadata:
+  name: example
+spec:
+  forProvider:
+    name: topic.name
+    replicationFactor: 1
+    partitions: 2
