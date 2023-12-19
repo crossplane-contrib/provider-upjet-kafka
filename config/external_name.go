@@ -17,7 +17,18 @@ var ExternalNameConfigs = map[string]config.ExternalName{
 	"kafka_topic": config.TemplatedStringAsIdentifier("", "{{ .parameters.name }}"),
 	"kafka_acl":   config.TemplatedStringAsIdentifier("", "{{ .parameters.acl_principal }}|{{ .parameters.acl_host }}|{{ .parameters.acl_operation }}|{{ .parameters.acl_permission_type }}|{{ .parameters.resource_type }}|{{ .parameters.resource_name }}|{{ .parameters.resource_pattern_type_filter }}"),
 	// I don't know what the id is. Let's find out.
-	"kafka_quota": config.IdentifierFromProvider,
+	"kafka_quota":                 config.IdentifierFromProvider,
+	"kafka_user_scram_credential": config.IdentifierFromProvider,
+}
+
+func GroupKindOverrides() config.ResourceOption {
+	return func(r *config.Resource) {
+		fmt.Println(r, r.Name, r.ShortGroup, r.Kind, r.Path, r.UseAsync)
+		if r.Name == "kafka_user_scram_credential" {
+			r.ShortGroup = "kafka"
+			r.Kind = "UserScramCredential"
+		}
+	}
 }
 
 // ExternalNameConfigurations applies all external name configs listed in the

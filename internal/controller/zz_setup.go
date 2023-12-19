@@ -12,8 +12,8 @@ import (
 	acl "github.com/mbbush/provider-kafka-jet/internal/controller/kafka/acl"
 	quota "github.com/mbbush/provider-kafka-jet/internal/controller/kafka/quota"
 	topic "github.com/mbbush/provider-kafka-jet/internal/controller/kafka/topic"
+	userscramcredential "github.com/mbbush/provider-kafka-jet/internal/controller/kafka/userscramcredential"
 	providerconfig "github.com/mbbush/provider-kafka-jet/internal/controller/providerconfig"
-	scramcredential "github.com/mbbush/provider-kafka-jet/internal/controller/user/scramcredential"
 )
 
 // Setup creates all controllers with the supplied logger and adds them to
@@ -23,8 +23,8 @@ func Setup(mgr ctrl.Manager, o controller.Options) error {
 		acl.Setup,
 		quota.Setup,
 		topic.Setup,
+		userscramcredential.Setup,
 		providerconfig.Setup,
-		scramcredential.Setup,
 	} {
 		if err := setup(mgr, o); err != nil {
 			return err
