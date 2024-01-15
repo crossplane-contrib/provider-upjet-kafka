@@ -7,3 +7,6 @@ spec:
     name: topic.name
     replicationFactor: 1
     partitions: 2
+    config:
+      min.insync.replicas: 1
+
