@@ -8,5 +8,5 @@ spec:
     replicationFactor: 1
     partitions: 2
     config:
-      min.insync.replicas: 1
+      min.insync.replicas: "1"
 
