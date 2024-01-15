@@ -84,8 +84,8 @@ github.com/crossplane/crossplane-runtime v1.14.0-rc.0.0.20231011070344-cc691421c
 github.com/crossplane/crossplane-runtime v1.14.0-rc.0.0.20231011070344-cc691421c2e5/go.mod h1:kCS5576be8g++HhiDGEBUw+8nkW8p4jhURYeC0zx8jM=
 github.com/crossplane/crossplane-tools v0.0.0-20230925130601-628280f8bf79 h1:HigXs5tEQxWz0fcj8hzbU2UAZgEM7wPe0XRFOsrtF8Y=
 github.com/crossplane/crossplane-tools v0.0.0-20230925130601-628280f8bf79/go.mod h1:+e4OaFlOcmr0JvINHl/yvEYBrZawzTgj6pQumOH1SS0=
-github.com/crossplane/upjet v1.1.0-rc.0.0.20231218093147-9543be90ce6b h1:1rUUZ95ZR6asQ8kS30afH/KivdMZI7B3L+A6DBa/sf8=
-github.com/crossplane/upjet v1.1.0-rc.0.0.20231218093147-9543be90ce6b/go.mod h1:t9etxIdYaxgyvFPBToikm5zBHi8RIpX8N4mTH77lQFM=
+github.com/crossplane/upjet v1.1.0-rc.0.0.20240109093512-1976411db85a h1:ZIZTo765UlrCwcJz3QxLnbsh5K6esvN/KQqX9zhjKbI=
+github.com/crossplane/upjet v1.1.0-rc.0.0.20240109093512-1976411db85a/go.mod h1:nyvdbW1znPjCFn9h7uwhTEeumNEmgFwoqbrHP7oOw3U=
 github.com/dave/jennifer v1.4.1 h1:XyqG6cn5RQsTj3qlWQTKlRGAyrTcsk1kUmWdZBzRjDw=
 github.com/dave/jennifer v1.4.1/go.mod h1:7jEdnm+qBcxl8PC0zyp7vxcpSRnzXSt9r39tpTVGlwA=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
