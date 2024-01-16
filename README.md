@@ -59,7 +59,20 @@ Build binary:
 make build
 ```
 
+## What's different from the existing [provider-kafka](https://github.com/crossplane-contrib/provider-kafka)?
+This provider uses upjet with the no-fork architecture to build on the existing [Mongey/terraform-provider-kafka](https://github.com/Mongey/terraform-provider-kafka), adding support for crossplane management policies, kafka quotas, and kafka user scram credentials.
+
+The kafka library underlying the terraform provider is [sarama](https://github.com/IBM/sarama). This library does not currently support AWS MSK SASL-IAM auth. 
+
+## How stable/well-tested is this?
+
+The topic resource has a working automated test pipeline. The other three resources do not yet, and are provided on an as-is basis. They _should_ work just as well as they do in terraform, but I have not confirmed that.
+
+The configuration interface is likely to undergo breaking changes to make it more convenient to use from inside crossplane. Currently it is an exact copy of the terraform provider's config.
+
 ## Report a Bug
 
 For filing bugs, suggesting improvements, or requesting new features, please
 open an [issue](https://github.com/crossplane-contrib/provider-upjet-kafka/issues).
+
+I would welcome assistance and collaboration.
