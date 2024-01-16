@@ -1,4 +1,4 @@
-module github.com/mbbush/provider-kafka-jet
+module github.com/crossplane-contrib/provider-upjet-kafka
 
 go 1.19
 

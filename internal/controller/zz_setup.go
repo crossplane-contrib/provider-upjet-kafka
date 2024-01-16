@@ -9,11 +9,11 @@ import (
 
 	"github.com/crossplane/upjet/pkg/controller"
 
-	acl "github.com/mbbush/provider-kafka-jet/internal/controller/kafka/acl"
-	quota "github.com/mbbush/provider-kafka-jet/internal/controller/kafka/quota"
-	topic "github.com/mbbush/provider-kafka-jet/internal/controller/kafka/topic"
-	userscramcredential "github.com/mbbush/provider-kafka-jet/internal/controller/kafka/userscramcredential"
-	providerconfig "github.com/mbbush/provider-kafka-jet/internal/controller/providerconfig"
+	acl "github.com/crossplane-contrib/provider-upjet-kafka/internal/controller/kafka/acl"
+	quota "github.com/crossplane-contrib/provider-upjet-kafka/internal/controller/kafka/quota"
+	topic "github.com/crossplane-contrib/provider-upjet-kafka/internal/controller/kafka/topic"
+	userscramcredential "github.com/crossplane-contrib/provider-upjet-kafka/internal/controller/kafka/userscramcredential"
+	providerconfig "github.com/crossplane-contrib/provider-upjet-kafka/internal/controller/providerconfig"
 )
 
 // Setup creates all controllers with the supplied logger and adds them to

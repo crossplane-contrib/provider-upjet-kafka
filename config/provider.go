@@ -14,7 +14,7 @@ import (
 
 const (
 	resourcePrefix = "kafka"
-	modulePath     = "github.com/mbbush/provider-kafka-jet"
+	modulePath     = "github.com/crossplane-contrib/provider-upjet-kafka"
 )
 
 //go:embed schema.json

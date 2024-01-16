@@ -23,8 +23,8 @@ import (
 	"github.com/crossplane/upjet/pkg/metrics"
 	ctrl "sigs.k8s.io/controller-runtime"
 
-	v1alpha1 "github.com/mbbush/provider-kafka-jet/apis/kafka/v1alpha1"
-	features "github.com/mbbush/provider-kafka-jet/internal/features"
+	v1alpha1 "github.com/crossplane-contrib/provider-upjet-kafka/apis/kafka/v1alpha1"
+	features "github.com/crossplane-contrib/provider-upjet-kafka/internal/features"
 )
 
 // Setup adds a controller that reconciles Topic managed resources.

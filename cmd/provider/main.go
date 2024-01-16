@@ -26,12 +26,12 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/cache"
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
 
-	"github.com/mbbush/provider-kafka-jet/apis"
-	"github.com/mbbush/provider-kafka-jet/apis/v1alpha1"
-	"github.com/mbbush/provider-kafka-jet/config"
-	"github.com/mbbush/provider-kafka-jet/internal/clients"
-	"github.com/mbbush/provider-kafka-jet/internal/controller"
-	"github.com/mbbush/provider-kafka-jet/internal/features"
+	"github.com/crossplane-contrib/provider-upjet-kafka/apis"
+	"github.com/crossplane-contrib/provider-upjet-kafka/apis/v1alpha1"
+	"github.com/crossplane-contrib/provider-upjet-kafka/config"
+	"github.com/crossplane-contrib/provider-upjet-kafka/internal/clients"
+	"github.com/crossplane-contrib/provider-upjet-kafka/internal/controller"
+	"github.com/crossplane-contrib/provider-upjet-kafka/internal/features"
 )
 
 func main() {
@@ -55,7 +55,7 @@ func main() {
 	kingpin.MustParse(app.Parse(os.Args[1:]))
 
 	zl := zap.New(zap.UseDevMode(*debug))
-	log := logging.NewLogrLogger(zl.WithName("provider-kafka-jet"))
+	log := logging.NewLogrLogger(zl.WithName("provider-upjet-kafka"))
 	if *debug {
 		// The controller-runtime runs with a no-op logger by default. It is
 		// *very* verbose even at info level, so we only provide it a real
@@ -73,7 +73,7 @@ func main() {
 
 	mgr, err := ctrl.NewManager(cfg, ctrl.Options{
 		LeaderElection:   *leaderElection,
-		LeaderElectionID: "crossplane-leader-election-provider-kafka-jet",
+		LeaderElectionID: "crossplane-leader-election-provider-upjet-kafka",
 		Cache: cache.Options{
 			SyncPeriod: syncPeriod,
 		},

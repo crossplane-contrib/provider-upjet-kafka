@@ -11,7 +11,7 @@ import (
 
 	"github.com/crossplane/upjet/pkg/pipeline"
 
-	"github.com/mbbush/provider-kafka-jet/config"
+	"github.com/crossplane-contrib/provider-upjet-kafka/config"
 )
 
 func main() {

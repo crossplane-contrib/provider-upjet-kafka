@@ -1,8 +1,8 @@
 # ====================================================================================
 # Setup Project
 
-PROJECT_NAME ?= provider-kafka-jet
-PROJECT_REPO ?= github.com/mbbush/$(PROJECT_NAME)
+PROJECT_NAME ?= provider-upjet-kafka
+PROJECT_REPO ?= github.com/crossplane-contrib/$(PROJECT_NAME)
 
 export TERRAFORM_VERSION ?= 1.5.5
 
@@ -90,7 +90,7 @@ fallthrough: submodules
 
 # NOTE(hasheddan): we force image building to happen prior to xpkg build so that
 # we ensure image is present in daemon.
-xpkg.build.provider-kafka-jet: do.build.images
+xpkg.build.provider-upjet-kafka: do.build.images
 
 # NOTE(hasheddan): we ensure up is installed prior to running platform-specific
 # build steps in parallel to avoid encountering an installation race condition.
