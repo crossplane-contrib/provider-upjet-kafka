@@ -1,0 +1,52 @@
+---
+apiVersion: kafka.upjet.crossplane.io/v1alpha1
+kind: Topic
+metadata:
+  name: example
+spec:
+  forProvider:
+    name: event.user.update
+    replicationFactor: 1
+    partitions: 2
+    config:
+      min.insync.replicas: "1"
+
+---
+apiVersion: kafka.upjet.crossplane.io/v1alpha1
+kind: Quota
+metadata:
+  name: example
+spec:
+  forProvider:
+    entityName: user2
+    entityType: user
+    config:
+      consumer_byte_rate: 5000000
+
+---
+apiVersion: kafka.upjet.crossplane.io/v1alpha1
+kind: ACL
+metadata:
+  name: deny-delete-topic
+spec:
+  forProvider:
+    resourceName: event.user.update
+    resourceType: Topic
+    aclPrincipal: User:user1
+    aclHost: "*"
+    aclOperation: Delete
+    aclPermissionType: Deny
+---
+apiVersion: kafka.upjet.crossplane.io/v1alpha1
+kind: ACL
+metadata:
+  name: allow-all
+spec:
+  forProvider:
+    resourceName: "*"
+    resourceType: Topic
+    resourcePatternTypeFilter: Any
+    aclPrincipal: User:user1
+    aclHost: "*"
+    aclOperation: All
+    aclPermissionType: Any
