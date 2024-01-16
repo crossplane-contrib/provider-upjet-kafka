@@ -4,9 +4,9 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.13.0
-  name: storeconfigs.kafka.jet.crossplane.io
+  name: storeconfigs.kafka.upjet.crossplane.io
 spec:
-  group: kafka.jet.crossplane.io
+  group: kafka.upjet.crossplane.io
   names:
     categories:
     - crossplane

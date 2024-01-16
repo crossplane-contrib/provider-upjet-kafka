@@ -31,7 +31,7 @@ ${KUBECTL} -n upbound-system wait --for=condition=Available deployment --all --t
 
 echo "Creating a default provider config..."
 cat <<EOF | ${KUBECTL} apply -f -
-apiVersion: kafka.jet.crossplane.io/v1beta1
+apiVersion: kafka.upjet.crossplane.io/v1beta1
 kind: ProviderConfig
 metadata:
   name: default

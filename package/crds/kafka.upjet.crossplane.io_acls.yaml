@@ -4,18 +4,18 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.13.0
-  name: userscramcredentials.kafka.jet.crossplane.io
+  name: acls.kafka.upjet.crossplane.io
 spec:
-  group: kafka.jet.crossplane.io
+  group: kafka.upjet.crossplane.io
   names:
     categories:
     - crossplane
     - managed
     - kafka
-    kind: UserScramCredential
-    listKind: UserScramCredentialList
-    plural: userscramcredentials
-    singular: userscramcredential
+    kind: ACL
+    listKind: ACLList
+    plural: acls
+    singular: acl
   scope: Cluster
   versions:
   - additionalPrinterColumns:
@@ -34,8 +34,7 @@ spec:
     name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: UserScramCredential is the Schema for the UserScramCredentials
-          API. <no value>
+        description: ACL is the Schema for the ACLs API. <no value>
         properties:
           apiVersion:
             description: 'APIVersion defines the versioned schema of this representation
@@ -50,7 +49,7 @@ spec:
           metadata:
             type: object
           spec:
-            description: UserScramCredentialSpec defines the desired state of UserScramCredential
+            description: ACLSpec defines the desired state of ACL
             properties:
               deletionPolicy:
                 default: Delete
@@ -67,35 +66,28 @@ spec:
                 type: string
               forProvider:
                 properties:
-                  passwordSecretRef:
-                    description: The password of the credential
-                    properties:
-                      key:
-                        description: The key to select.
-                        type: string
-                      name:
-                        description: Name of the secret.
-                        type: string
-                      namespace:
-                        description: Namespace of the secret.
-                        type: string
-                    required:
-                    - key
-                    - name
-                    - namespace
-                    type: object
-                  scramIterations:
-                    description: The number of SCRAM iterations used when generating
-                      the credential
-                    format: int64
-                    type: integer
-                  scramMechanism:
-                    description: The SCRAM mechanism used to generate the credential
-                      (SCRAM-SHA-256, SCRAM-SHA-512)
+                  aclHost:
                     type: string
-                  username:
-                    description: The name of the credential
+                  aclOperation:
                     type: string
+                  aclPermissionType:
+                    type: string
+                  aclPrincipal:
+                    type: string
+                  resourceName:
+                    description: The name of the resource
+                    type: string
+                  resourcePatternTypeFilter:
+                    type: string
+                  resourceType:
+                    type: string
+                required:
+                - aclHost
+                - aclOperation
+                - aclPermissionType
+                - aclPrincipal
+                - resourceName
+                - resourceType
                 type: object
               initProvider:
                 description: THIS IS A BETA FIELD. It will be honored unless the Management
@@ -108,19 +100,6 @@ spec:
                   on creation, but we do not desire to update them after creation,
                   for example because of an external controller is managing them,
                   like an autoscaler.
-                properties:
-                  scramIterations:
-                    description: The number of SCRAM iterations used when generating
-                      the credential
-                    format: int64
-                    type: integer
-                  scramMechanism:
-                    description: The SCRAM mechanism used to generate the credential
-                      (SCRAM-SHA-256, SCRAM-SHA-512)
-                    type: string
-                  username:
-                    description: The name of the credential
-                    type: string
                 type: object
               managementPolicies:
                 default:
@@ -282,36 +261,27 @@ spec:
             required:
             - forProvider
             type: object
-            x-kubernetes-validations:
-            - message: spec.forProvider.passwordSecretRef is a required parameter
-              rule: '!(''*'' in self.managementPolicies || ''Create'' in self.managementPolicies
-                || ''Update'' in self.managementPolicies) || has(self.forProvider.passwordSecretRef)'
-            - message: spec.forProvider.scramMechanism is a required parameter
-              rule: '!(''*'' in self.managementPolicies || ''Create'' in self.managementPolicies
-                || ''Update'' in self.managementPolicies) || has(self.forProvider.scramMechanism)
-                || (has(self.initProvider) && has(self.initProvider.scramMechanism))'
-            - message: spec.forProvider.username is a required parameter
-              rule: '!(''*'' in self.managementPolicies || ''Create'' in self.managementPolicies
-                || ''Update'' in self.managementPolicies) || has(self.forProvider.username)
-                || (has(self.initProvider) && has(self.initProvider.username))'
           status:
-            description: UserScramCredentialStatus defines the observed state of UserScramCredential.
+            description: ACLStatus defines the observed state of ACL.
             properties:
               atProvider:
                 properties:
+                  aclHost:
+                    type: string
+                  aclOperation:
+                    type: string
+                  aclPermissionType:
+                    type: string
+                  aclPrincipal:
+                    type: string
                   id:
                     type: string
-                  scramIterations:
-                    description: The number of SCRAM iterations used when generating
-                      the credential
-                    format: int64
-                    type: integer
-                  scramMechanism:
-                    description: The SCRAM mechanism used to generate the credential
-                      (SCRAM-SHA-256, SCRAM-SHA-512)
+                  resourceName:
+                    description: The name of the resource
                     type: string
-                  username:
-                    description: The name of the credential
+                  resourcePatternTypeFilter:
+                    type: string
+                  resourceType:
                     type: string
                 type: object
               conditions:

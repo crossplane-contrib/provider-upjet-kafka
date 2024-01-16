@@ -4,18 +4,18 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.13.0
-  name: topics.kafka.jet.crossplane.io
+  name: quotas.kafka.upjet.crossplane.io
 spec:
-  group: kafka.jet.crossplane.io
+  group: kafka.upjet.crossplane.io
   names:
     categories:
     - crossplane
     - managed
     - kafka
-    kind: Topic
-    listKind: TopicList
-    plural: topics
-    singular: topic
+    kind: Quota
+    listKind: QuotaList
+    plural: quotas
+    singular: quota
   scope: Cluster
   versions:
   - additionalPrinterColumns:
@@ -34,7 +34,7 @@ spec:
     name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: Topic is the Schema for the Topics API. <no value>
+        description: Quota is the Schema for the Quotas API. <no value>
         properties:
           apiVersion:
             description: 'APIVersion defines the versioned schema of this representation
@@ -49,7 +49,7 @@ spec:
           metadata:
             type: object
           spec:
-            description: TopicSpec defines the desired state of Topic
+            description: QuotaSpec defines the desired state of Quota
             properties:
               deletionPolicy:
                 default: Delete
@@ -68,22 +68,15 @@ spec:
                 properties:
                   config:
                     additionalProperties:
-                      type: string
-                    description: A map of string k/v attributes.
+                      type: number
+                    description: A map of string k/v properties.
                     type: object
-                  name:
-                    description: The name of the topic.
+                  entityName:
+                    description: The name of the entity
                     type: string
-                  partitions:
-                    description: Number of partitions.
-                    format: int64
-                    type: integer
-                  replicationFactor:
-                    description: Number of replicas.
-                    format: int64
-                    type: integer
-                required:
-                - name
+                  entityType:
+                    description: The type of the entity (client-id, user, ip)
+                    type: string
                 type: object
               initProvider:
                 description: THIS IS A BETA FIELD. It will be honored unless the Management
@@ -99,17 +92,15 @@ spec:
                 properties:
                   config:
                     additionalProperties:
-                      type: string
-                    description: A map of string k/v attributes.
+                      type: number
+                    description: A map of string k/v properties.
                     type: object
-                  partitions:
-                    description: Number of partitions.
-                    format: int64
-                    type: integer
-                  replicationFactor:
-                    description: Number of replicas.
-                    format: int64
-                    type: integer
+                  entityName:
+                    description: The name of the entity
+                    type: string
+                  entityType:
+                    description: The type of the entity (client-id, user, ip)
+                    type: string
                 type: object
               managementPolicies:
                 default:
@@ -272,37 +263,32 @@ spec:
             - forProvider
             type: object
             x-kubernetes-validations:
-            - message: spec.forProvider.partitions is a required parameter
+            - message: spec.forProvider.entityName is a required parameter
               rule: '!(''*'' in self.managementPolicies || ''Create'' in self.managementPolicies
-                || ''Update'' in self.managementPolicies) || has(self.forProvider.partitions)
-                || (has(self.initProvider) && has(self.initProvider.partitions))'
-            - message: spec.forProvider.replicationFactor is a required parameter
+                || ''Update'' in self.managementPolicies) || has(self.forProvider.entityName)
+                || (has(self.initProvider) && has(self.initProvider.entityName))'
+            - message: spec.forProvider.entityType is a required parameter
               rule: '!(''*'' in self.managementPolicies || ''Create'' in self.managementPolicies
-                || ''Update'' in self.managementPolicies) || has(self.forProvider.replicationFactor)
-                || (has(self.initProvider) && has(self.initProvider.replicationFactor))'
+                || ''Update'' in self.managementPolicies) || has(self.forProvider.entityType)
+                || (has(self.initProvider) && has(self.initProvider.entityType))'
           status:
-            description: TopicStatus defines the observed state of Topic.
+            description: QuotaStatus defines the observed state of Quota.
             properties:
               atProvider:
                 properties:
                   config:
                     additionalProperties:
-                      type: string
-                    description: A map of string k/v attributes.
+                      type: number
+                    description: A map of string k/v properties.
                     type: object
+                  entityName:
+                    description: The name of the entity
+                    type: string
+                  entityType:
+                    description: The type of the entity (client-id, user, ip)
+                    type: string
                   id:
                     type: string
-                  name:
-                    description: The name of the topic.
-                    type: string
-                  partitions:
-                    description: Number of partitions.
-                    format: int64
-                    type: integer
-                  replicationFactor:
-                    description: Number of replicas.
-                    format: int64
-                    type: integer
                 type: object
               conditions:
                 description: Conditions of the resource.

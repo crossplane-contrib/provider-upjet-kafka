@@ -13,7 +13,7 @@ import (
 
 // Package type metadata.
 const (
-	Group   = "kafka.jet.crossplane.io"
+	Group   = "kafka.upjet.crossplane.io"
 	Version = "v1beta1"
 )
 

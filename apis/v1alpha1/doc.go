@@ -4,6 +4,6 @@ Copyright 2021 Upbound Inc.
 
 // Package v1alpha1 contains the core resources of the kafka jet provider.
 // +kubebuilder:object:generate=true
-// +groupName=kafka.jet.crossplane.io
+// +groupName=kafka.upjet.crossplane.io
 // +versionName=v1alpha1
 package v1alpha1

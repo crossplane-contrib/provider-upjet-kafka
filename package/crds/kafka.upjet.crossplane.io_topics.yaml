@@ -4,18 +4,18 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.13.0
-  name: acls.kafka.jet.crossplane.io
+  name: topics.kafka.upjet.crossplane.io
 spec:
-  group: kafka.jet.crossplane.io
+  group: kafka.upjet.crossplane.io
   names:
     categories:
     - crossplane
     - managed
     - kafka
-    kind: ACL
-    listKind: ACLList
-    plural: acls
-    singular: acl
+    kind: Topic
+    listKind: TopicList
+    plural: topics
+    singular: topic
   scope: Cluster
   versions:
   - additionalPrinterColumns:
@@ -34,7 +34,7 @@ spec:
     name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: ACL is the Schema for the ACLs API. <no value>
+        description: Topic is the Schema for the Topics API. <no value>
         properties:
           apiVersion:
             description: 'APIVersion defines the versioned schema of this representation
@@ -49,7 +49,7 @@ spec:
           metadata:
             type: object
           spec:
-            description: ACLSpec defines the desired state of ACL
+            description: TopicSpec defines the desired state of Topic
             properties:
               deletionPolicy:
                 default: Delete
@@ -66,28 +66,24 @@ spec:
                 type: string
               forProvider:
                 properties:
-                  aclHost:
+                  config:
+                    additionalProperties:
+                      type: string
+                    description: A map of string k/v attributes.
+                    type: object
+                  name:
+                    description: The name of the topic.
                     type: string
-                  aclOperation:
-                    type: string
-                  aclPermissionType:
-                    type: string
-                  aclPrincipal:
-                    type: string
-                  resourceName:
-                    description: The name of the resource
-                    type: string
-                  resourcePatternTypeFilter:
-                    type: string
-                  resourceType:
-                    type: string
+                  partitions:
+                    description: Number of partitions.
+                    format: int64
+                    type: integer
+                  replicationFactor:
+                    description: Number of replicas.
+                    format: int64
+                    type: integer
                 required:
-                - aclHost
-                - aclOperation
-                - aclPermissionType
-                - aclPrincipal
-                - resourceName
-                - resourceType
+                - name
                 type: object
               initProvider:
                 description: THIS IS A BETA FIELD. It will be honored unless the Management
@@ -100,6 +96,20 @@ spec:
                   on creation, but we do not desire to update them after creation,
                   for example because of an external controller is managing them,
                   like an autoscaler.
+                properties:
+                  config:
+                    additionalProperties:
+                      type: string
+                    description: A map of string k/v attributes.
+                    type: object
+                  partitions:
+                    description: Number of partitions.
+                    format: int64
+                    type: integer
+                  replicationFactor:
+                    description: Number of replicas.
+                    format: int64
+                    type: integer
                 type: object
               managementPolicies:
                 default:
@@ -261,28 +271,38 @@ spec:
             required:
             - forProvider
             type: object
+            x-kubernetes-validations:
+            - message: spec.forProvider.partitions is a required parameter
+              rule: '!(''*'' in self.managementPolicies || ''Create'' in self.managementPolicies
+                || ''Update'' in self.managementPolicies) || has(self.forProvider.partitions)
+                || (has(self.initProvider) && has(self.initProvider.partitions))'
+            - message: spec.forProvider.replicationFactor is a required parameter
+              rule: '!(''*'' in self.managementPolicies || ''Create'' in self.managementPolicies
+                || ''Update'' in self.managementPolicies) || has(self.forProvider.replicationFactor)
+                || (has(self.initProvider) && has(self.initProvider.replicationFactor))'
           status:
-            description: ACLStatus defines the observed state of ACL.
+            description: TopicStatus defines the observed state of Topic.
             properties:
               atProvider:
                 properties:
-                  aclHost:
-                    type: string
-                  aclOperation:
-                    type: string
-                  aclPermissionType:
-                    type: string
-                  aclPrincipal:
-                    type: string
+                  config:
+                    additionalProperties:
+                      type: string
+                    description: A map of string k/v attributes.
+                    type: object
                   id:
                     type: string
-                  resourceName:
-                    description: The name of the resource
+                  name:
+                    description: The name of the topic.
                     type: string
-                  resourcePatternTypeFilter:
-                    type: string
-                  resourceType:
-                    type: string
+                  partitions:
+                    description: Number of partitions.
+                    format: int64
+                    type: integer
+                  replicationFactor:
+                    description: Number of replicas.
+                    format: int64
+                    type: integer
                 type: object
               conditions:
                 description: Conditions of the resource.

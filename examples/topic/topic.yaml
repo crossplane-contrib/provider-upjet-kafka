@@ -1,4 +1,4 @@
-apiVersion: kafka.jet.crossplane.io/v1alpha1
+apiVersion: kafka.upjet.crossplane.io/v1alpha1
 kind: Topic
 metadata:
   name: example

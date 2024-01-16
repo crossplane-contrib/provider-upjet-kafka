@@ -26,7 +26,7 @@ var providerMetadata string
 // GetProvider returns provider configuration
 func GetProvider() *ujconfig.Provider {
 	pc := ujconfig.NewProvider([]byte(providerSchema), resourcePrefix, modulePath, []byte(providerMetadata),
-		ujconfig.WithRootGroup("jet.crossplane.io"),
+		ujconfig.WithRootGroup("upjet.crossplane.io"),
 		//ujconfig.WithIncludeList(ExternalNameConfigured()),
 		ujconfig.WithNoForkIncludeList(ExternalNameConfigured()),
 		ujconfig.WithFeaturesPackage("internal/features"),
