@@ -33,7 +33,7 @@ func GetProvider() *ujconfig.Provider {
 		ujconfig.WithTerraformProvider(kafka.Provider()),
 		ujconfig.WithDefaultResourceOptions(
 			ExternalNameConfigurations(),
-			NoAsync(),
+			//NoAsync(),
 			GroupKindOverrides(),
 		))
 
