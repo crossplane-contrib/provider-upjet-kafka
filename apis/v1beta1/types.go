@@ -13,7 +13,23 @@ import (
 // A ProviderConfigSpec defines the desired state of a ProviderConfig.
 type ProviderConfigSpec struct {
 	// Credentials required to authenticate to this provider.
-	Credentials ProviderCredentials `json:"credentials"`
+	// Non-sensitive configuration parameters may either be specified in the credentials secret or in the ProviderConfig
+	Credentials *ProviderCredentials `json:"credentials"`
+	// +optional
+	TlsConfig *TlsConfig `json:"tls,omitempty"`
+	// +optional
+	BootstrapBrokers *[]string `json:"bootstrapBrokers,omitempty"`
+	// +optional
+	BootstrapBrokerString *string `json:"bootstrapBrokerString,omitempty"`
+}
+
+type TlsConfig struct {
+	// +optional
+	CaCert *string `json:"caCert,omitempty"`
+	// +optional
+	TlsEnabled *bool `json:"tlsEnabled,omitempty"`
+	// +optional
+	SkipTlsVerify *bool `json:"skipTlsVerify,omitempty"`
 }
 
 // ProviderCredentials required to authenticate.
