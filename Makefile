@@ -14,8 +14,6 @@ export TERRAFORM_PROVIDER_DOWNLOAD_URL_PREFIX ?= $(TERRAFORM_PROVIDER_REPO)/rele
 export TERRAFORM_NATIVE_PROVIDER_BINARY ?= terraform-provider-kafka_0.5.4
 export TERRAFORM_DOCS_PATH ?= docs/resources
 
-KIND_CLUSTER_NAME ?= $(PROJECT_NAME)
-
 PLATFORMS ?= linux_amd64 linux_arm64
 
 # -include will silently skip missing files, which allows us
@@ -23,6 +21,9 @@ PLATFORMS ?= linux_amd64 linux_arm64
 # "include" was used, the make command would fail and refuse
 # to run a target until the include commands succeeded.
 -include build/makelib/common.mk
+
+KIND_CLUSTER_NAME ?= $(PROJECT_NAME)
+KIND_CONFIG_FILE = $(ROOT_DIR)/cluster/test/kind-config.yaml
 
 # ====================================================================================
 # Setup Output

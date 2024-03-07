@@ -2,35 +2,39 @@
 set -aeuo pipefail
 
 echo "Running setup.sh"
+pwd
 echo "Installing kafka in the cluster"
-helm upgrade --install --wait kafka oci://registry-1.docker.io/bitnamicharts/kafka -n kafka --create-namespace
+helm upgrade kafka /home/matt/git/provider-upjet-kafka/cluster/test/local-kafka-dev -n kafka --create-namespace --wait --install
+
+echo "Setting kafka admin user password"
+#KAFKA_PASSWORD=$(cat /dev/urandom | tr -d -c '[A-Za-z0-9]' | head -c 8)
+
+kubectl exec -n kafka svc/kafka -- kafka-configs --zookeeper zookeeper:2181 --alter --add-config "SCRAM-SHA-256=[password=broker]" --entity-type users --entity-name broker
+kubectl exec -n kafka svc/kafka -- kafka-configs --zookeeper zookeeper:2181 --alter --add-config "SCRAM-SHA-256=[password=client-secret]" --entity-type users --entity-name client
 
 echo "Creating cloud credential secret..."
-KAFKA_PASSWORD=$(kubectl get secret -n kafka kafka-user-passwords -o jsonpath='{.data.client-passwords}' | base64 -d | cut -d , -f 1)
 PROVIDER_CONFIG=$(cat <<EOL
 {
 	"bootstrap_servers": [
-		"kafka-controller-0.kafka-controller-headless.kafka.svc.cluster.local:9092",
-		"kafka-controller-1.kafka-controller-headless.kafka.svc.cluster.local:9092",
-		"kafka-controller-2.kafka-controller-headless.kafka.svc.cluster.local:9092"
+		"kafka.kafka.svc.cluster.local:9092"
 	],
-	"sasl_username": "user1",
-	"sasl_password": "$KAFKA_PASSWORD",
+	"sasl_username": "client",
+	"sasl_password": "client-secret",
 	"sasl_mechanism": "scram-sha256",
 	"tls_enabled": false
 }
 EOL
 )
-${KUBECTL} -n upbound-system create secret generic provider-secret --from-literal=config="$PROVIDER_CONFIG" --dry-run=client -o yaml | ${KUBECTL} apply -f -
+kubectl -n upbound-system create secret generic provider-secret --from-literal=config="$PROVIDER_CONFIG" --dry-run=client -o yaml | kubectl apply -f -
 
 echo "Waiting until provider is healthy..."
-${KUBECTL} wait provider.pkg --all --for condition=Healthy --timeout 5m
+kubectl wait provider.pkg --all --for condition=Healthy --timeout 5m
 
 echo "Waiting for all pods to come online..."
-${KUBECTL} -n upbound-system wait --for=condition=Available deployment --all --timeout=5m
+kubectl -n upbound-system wait --for=condition=Available deployment --all --timeout=5m
 
 echo "Creating a default provider config..."
-cat <<EOF | ${KUBECTL} apply -f -
+cat <<EOF | kubectl apply -f -
 apiVersion: kafka.upjet.crossplane.io/v1beta1
 kind: ProviderConfig
 metadata:
@@ -42,3 +46,4 @@ spec:
       name: provider-secret
       namespace: upbound-system
       key: config
+EOF

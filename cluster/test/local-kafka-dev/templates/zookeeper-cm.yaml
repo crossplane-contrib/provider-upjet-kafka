@@ -1,0 +1,12 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: zookeeper-config
+data:
+  zookeeper_server_jaas.conf: |
+    Server {
+       org.apache.zookeeper.server.auth.DigestLoginModule required
+       user_admin="admin"
+       user_kafka="kafka";
+    };
