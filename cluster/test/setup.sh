@@ -7,7 +7,6 @@ echo "Installing kafka in the cluster"
 helm upgrade kafka /home/matt/git/provider-upjet-kafka/cluster/test/local-kafka-dev -n kafka --create-namespace --wait --install
 
 echo "Setting kafka admin user password"
-#KAFKA_PASSWORD=$(cat /dev/urandom | tr -d -c '[A-Za-z0-9]' | head -c 8)
 
 kubectl exec -n kafka svc/kafka -- kafka-configs --zookeeper zookeeper:2181 --alter --add-config "SCRAM-SHA-256=[password=broker]" --entity-type users --entity-name broker
 kubectl exec -n kafka svc/kafka -- kafka-configs --zookeeper zookeeper:2181 --alter --add-config "SCRAM-SHA-256=[password=client-secret]" --entity-type users --entity-name client
@@ -15,13 +14,13 @@ kubectl exec -n kafka svc/kafka -- kafka-configs --zookeeper zookeeper:2181 --al
 echo "Creating cloud credential secret..."
 PROVIDER_CONFIG=$(cat <<EOL
 {
-	"bootstrap_servers": [
+	"bootstrapBrokers": [
 		"kafka.kafka.svc.cluster.local:9092"
 	],
-	"sasl_username": "client",
-	"sasl_password": "client-secret",
-	"sasl_mechanism": "scram-sha256",
-	"tls_enabled": false
+	"saslUsername": "client",
+	"saslPassword": "client-secret",
+	"saslMechanism": "SCRAM-SHA256",
+	"tlsEnabled": false
 }
 EOL
 )

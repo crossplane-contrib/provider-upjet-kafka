@@ -6,6 +6,7 @@ package config
 
 import (
 	"fmt"
+
 	"github.com/crossplane/upjet/pkg/config"
 )
 

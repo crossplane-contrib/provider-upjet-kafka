@@ -29,6 +29,41 @@ Notice that in this example Provider resource is referencing ControllerConfig wi
 
 You can see the API reference [here](https://doc.crds.dev/github.com/crossplane-contrib/provider-upjet-kafka).
 
+## Configuration
+Non-sensitive values can either be set in the `ProviderConfig`, or from a credential source such as a kubernetes secret.
+Sensitive values (private keys, usernames and passwords) must come from a credentials source. If defined in both, the `ProviderConfig` takes precedence.
+
+The format of a kubernetes secret used as a credentials source should be a JSON object, in a single key. Specify that key in the ProviderConfig.
+
+To aid platform developers working with limited tooling, the kafka brokers to connect to may be specified either as an array or a string.
+Only one is necessary. If both are specified, the array will take precedence over the string.
+
+In both the `ProviderConfig` and the credentials, unused configuration options should be left null/unset, as setting them to empty values may overwrite defaults defined elsewhere.
+
+Supported SASL mechanisms are PLAIN, SCRAM-SHA256, and SCRAM-SHA512
+
+Example credentials json with all options filled:
+
+```json
+{
+  bootstrapBrokers: [
+    "broker1:9092",
+    "broker2:9092"
+  ],
+  "bootstrapBrokerString": "broker1:9092,broker2:9092",
+  "caCert": "string that is passed directly to the underlying terraform provider",
+  "clientCert": "string that is passed directly to the underlying terraform provider",
+  "clientKey": "string that is passed directly to the underlying terraform provider",
+  "clientKeyPassphrase": "string that is passed directly to the underlying terraform provider",
+  "saslUsername": "crossplane",
+  "saslPassword": "BetterBeMoreSecureThanThisOne",
+  "saslMechanism": "SCRAM-SHA256",
+  "skipTlsVerify": false,
+  "tlsEnabled": true,
+  "timeout": 10
+}
+```
+
 ## Developing
 
 Run code-generation pipeline:
@@ -66,9 +101,7 @@ The kafka library underlying the terraform provider is [sarama](https://github.c
 
 ## How stable/well-tested is this?
 
-The topic resource has a working automated test pipeline. The other three resources do not yet, and are provided on an as-is basis. They _should_ work just as well as they do in terraform, but I have not confirmed that.
-
-The configuration interface is likely to undergo breaking changes to make it more convenient to use from inside crossplane. Currently it is an exact copy of the terraform provider's config.
+The topic and quota resources have a working automated test pipeline. ACL and UserScramCredential resources do not yet, and are provided on an as-is basis. They _should_ work just as well as they do in terraform, but I have not confirmed that.
 
 ## Report a Bug
 

@@ -12,22 +12,43 @@ import (
 
 // A ProviderConfigSpec defines the desired state of a ProviderConfig.
 type ProviderConfigSpec struct {
-	// Credentials required to authenticate to this provider.
-	// Non-sensitive configuration parameters may either be specified in the credentials secret or in the ProviderConfig
-	Credentials *ProviderCredentials `json:"credentials"`
-	// +optional
-	TlsConfig *TlsConfig `json:"tls,omitempty"`
+	// An array of host:port strings for the kafka brokers to connect to. E.g. ["broker-0:9092", "broker-1:9092"]
+	// If both are defined, this takes precedence over BootstrapBrokerString.
 	// +optional
 	BootstrapBrokers *[]string `json:"bootstrapBrokers,omitempty"`
+	// A comma-separated string of host:port strings for the kafka brokers to connect to.
+	// E.g. "broker-0:9092,broker-1:9092"
 	// +optional
 	BootstrapBrokerString *string `json:"bootstrapBrokerString,omitempty"`
+	// Credentials required to authenticate to this provider.
+	// Non-sensitive configuration parameters may either be specified in the credentials secret or in the ProviderConfig
+	// See the project's readme on github for schema details.
+	Credentials *ProviderCredentials `json:"credentials"`
+
+	// The SASL mechanism to use to authenticate with kafka. Supported values are PLAIN, SCRAM-SHA256, SCRAM-SHA512.
+	// Leave unset if not using SASL.
+	// +optional
+	// +kubebuilder:validation:Enum=PLAIN;SCRAM-SHA-256;SCRAM-SHA-512
+	SaslMechanism *string `json:"saslMechanism,omitempty"`
+	// Timeout in seconds to configure on the underlying kafka client.
+	// +optional
+	Timeout *int `json:"timeout,omitempty"`
+
+	// +optional
+	TlsConfig *TlsConfig `json:"tls,omitempty"`
 }
 
 type TlsConfig struct {
+	// CA Certificate to validate the server's certificate
 	// +optional
 	CaCert *string `json:"caCert,omitempty"`
+	// Client certificate
+	// +optional
+	ClientCert *string `json:"clientCert,omitempty"`
+	// Enable communications with the target kafka cluster over TLS
 	// +optional
 	TlsEnabled *bool `json:"tlsEnabled,omitempty"`
+	// Disable basic TLS verification. This should only be true if the kafka server is an insecure development instance.
 	// +optional
 	SkipTlsVerify *bool `json:"skipTlsVerify,omitempty"`
 }

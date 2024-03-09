@@ -8,13 +8,14 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"github.com/Mongey/terraform-provider-kafka/kafka"
+	terraform2 "github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
+	"strings"
+
 	"github.com/crossplane/crossplane-runtime/pkg/resource"
 	"github.com/crossplane/upjet/pkg/config"
 	"github.com/pkg/errors"
 	"k8s.io/apimachinery/pkg/types"
 	"sigs.k8s.io/controller-runtime/pkg/client"
-	"strings"
 
 	"github.com/crossplane/upjet/pkg/terraform"
 
@@ -23,11 +24,34 @@ import (
 
 const (
 	// error messages
-	errNoProviderConfig     = "no providerConfigRef provided"
-	errGetProviderConfig    = "cannot get referenced ProviderConfig"
-	errTrackUsage           = "cannot track ProviderConfig usage"
-	errExtractCredentials   = "cannot extract credentials"
-	errUnmarshalCredentials = "cannot unmarshal kafka credentials as JSON"
+	errNoProviderConfig        = "no providerConfigRef provided"
+	errGetProviderConfig       = "cannot get referenced ProviderConfig"
+	errTrackUsage              = "cannot track ProviderConfig usage"
+	errExtractCredentials      = "cannot extract credentials"
+	errUnmarshalCredentials    = "cannot unmarshal kafka credentials as JSON"
+	keyTfBootstrapBrokers      = "bootstrap_servers"
+	keyTfCaCert                = "ca_cert"
+	keyTfClientCert            = "client_cert"
+	keyTfClientKey             = "client_key"
+	keyTfClientKeyPassphrase   = "client_key_passphrase"
+	keyTfSaslUsername          = "sasl_username"
+	keyTfSaslPassword          = "sasl_password"
+	keyTfSaslMechanism         = "sasl_mechanism"
+	keyTfSkipTlsVerify         = "skip_tls_verify"
+	keyTfTlsEnabled            = "tls_enabled"
+	keyTfTimeout               = "timeout"
+	keyXpBootstrapBrokers      = "bootstrapBrokers"
+	keyXpBootstrapBrokerString = "bootstrapBrokerString"
+	keyXpCaCert                = "caCert"
+	keyXpClientCert            = "clientCert"
+	keyXpClientKey             = "clientKey"
+	keyXpClientKeyPassphrase   = "clientKeyPassphrase"
+	keyXpSaslUsername          = "saslUsername"
+	keyXpSaslPassword          = "saslPassword"
+	keyXpSaslMechanism         = "saslMechanism"
+	keyXpSkipTlsVerify         = "skipTlsVerify"
+	keyXpTlsEnabled            = "tlsEnabled"
+	keyXpTimeout               = "timeout"
 )
 
 // TerraformSetupBuilder builds Terraform a terraform.SetupFn function which
@@ -41,7 +65,6 @@ func TerraformSetupBuilder(version, providerSource, providerVersion string, ujpr
 				Version: providerVersion,
 			},
 		}
-		fmt.Println("running terraform setup builder")
 
 		configRef := mg.GetProviderConfigReference()
 		if configRef == nil {
@@ -66,117 +89,140 @@ func TerraformSetupBuilder(version, providerSource, providerVersion string, ujpr
 			return ps, errors.Wrap(err, errUnmarshalCredentials)
 		}
 
-		fmt.Println(creds)
-		//configKeys := []string{
-		//	"ca_cert",
-		//	"tls_enabled",
-		//	"client_cert",
-		//	"bootstrap_servers",
-		//	"client_key",
-		//	"client_key_passphrase",
-		//	"skip_tls_verify",
-		//	"sasl_username",
-		//	"sasl_password",
-		//	"sasl_mechanism",
-		//}
-
-		// TODO: See if there's somewhere in here where provider-aws configures the client.
-		// It looks like the terraform.Setup in type noForkExternal is unset. How to set it?
-
-		// Set credentials in Terraform provider configuration.
-		// This Crossplane provider config schema exactly matches the schema of the terraform provider config.
-		// See https://github.com/Mongey/terraform-provider-kafka#provider-configuration
-
-		// I think this is only used for the cli provider?
-		ps.Configuration = creds
-
-		// It seems like there should be a way to just call the ConfigureFunc defined on the provider, but I couldn't figure it out.
-		ps.Meta, err = providerConfigure(creds)
+		// Merge the ProviderConfig and credentials into a configuration map for the Terraform provider.
+		tfConfig, err := parseToTfConfig(ctx, creds, pc)
 		if err != nil {
+			return ps, errors.Wrap(err, "failed to parse credentials to terraform configuration")
+		}
+		ps.Configuration = tfConfig
+		if ujprovider.TerraformProvider != nil {
+			diag := ujprovider.TerraformProvider.Configure(ctx, &terraform2.ResourceConfig{
+				Config: tfConfig,
+			})
+			if diag != nil && diag.HasError() {
+				return ps, errors.Errorf("failed to configure the provider: %v", diag)
+			}
+			ps.Meta = ujprovider.TerraformProvider.Meta()
+		} else {
+			fmt.Println("ERROR: Need to instantiate a terraform provider somehow")
 			return ps, errors.Wrap(err, "Unable to set terraform provider setup.Meta")
 		}
 		return ps, nil
 	}
 }
-func providerConfigure(config map[string]any) (interface{}, error) {
-	saslMechanism, ok := config["sasl_mechanism"].(string)
-	if !ok {
-		saslMechanism = "plain"
+
+func parseToTfConfig(ctx context.Context, creds map[string]any, pc *v1beta1.ProviderConfig) (map[string]any, error) {
+	tfConfig := make(map[string]any)
+
+	// brokers
+	// First read from creds string, then from creds array, then from provider config. Last one takes precedence.
+	sBrokers, ok := creds[keyXpBootstrapBrokerString].(string)
+	if ok && sBrokers != "" {
+		//fmt.Println("Using bootstrap broker string from credentials")
+		tfConfig[keyTfBootstrapBrokers] = strings.Split(sBrokers, ",")
 	}
-	switch saslMechanism {
-	case "scram-sha512", "scram-sha256", "plain":
-	default:
-		return nil, fmt.Errorf("[ERROR] Invalid sasl mechanism \"%s\": can only be \"scram-sha256\", \"scram-sha512\" or \"plain\"", saslMechanism)
-	}
-	caCert, ok := config["ca_cert"].(string)
-	if !ok {
-		caCert = ""
-	}
-	clientCert, ok := config["client_cert"].(string)
-	if !ok {
-		clientCert = ""
-	}
-	clientKey, ok := config["client_key"].(string)
-	if !ok {
-		clientKey = ""
-	}
-	clientKeyPassphrase, ok := config["client_key_passphrase"].(string)
-	if !ok {
-		clientKeyPassphrase = ""
-	}
-	var brokers []string
-	iBrokers, ok := config["bootstrap_servers"].([]interface{})
-	if !ok || iBrokers == nil || len(iBrokers) == 0 {
-		sBrokers, ok := config["bootstrap_broker_string"].(string)
-		if !ok || sBrokers == "" {
-			return nil, errors.New("Can't deserialize bootstrap_servers")
-		}
-		brokers = strings.Split(sBrokers, ",")
-	} else {
-		brokers = make([]string, len(iBrokers))
-		for idx, ifce := range iBrokers {
+	iCredsBrokers, ok := creds[keyXpBootstrapBrokers].([]interface{})
+	if ok && iCredsBrokers != nil {
+		//fmt.Println("Using bootstrap brokers from credentials")
+		brokers := make([]string, len(iCredsBrokers))
+		for idx, ifce := range iCredsBrokers {
 			if ifce != nil {
 				brokers[idx] = ifce.(string)
 			}
 		}
+		tfConfig[keyTfBootstrapBrokers] = brokers
 	}
 
-	saslUsername, ok := config["sasl_username"].(string)
-	if !ok {
-		saslUsername = ""
+	if pcBrokerString := pc.Spec.BootstrapBrokerString; pcBrokerString != nil {
+		//fmt.Println("Using bootstrap broker string from provider config")
+		tfConfig[keyTfBootstrapBrokers] = strings.Split(*pcBrokerString, ",")
 	}
-	saslPassword, ok := config["sasl_password"].(string)
-	if !ok {
-		saslPassword = ""
-	}
-	skipTlsVerify, ok := config["skip_tls_verify"].(bool)
-	if !ok {
-		skipTlsVerify = false
-	}
-	tlsEnabled, ok := config["tls_enabled"].(bool)
-	if !ok {
-		tlsEnabled = true
-	}
-	timeout, ok := config["timeout"].(int)
-	if !ok {
-		timeout = 3 // 3 seconds is the default in the underlying sarama library's Admin client
+	if pcBrokers := pc.Spec.BootstrapBrokers; pcBrokers != nil {
+		//fmt.Println("Using bootstrap brokers from provider config")
+		tfConfig[keyTfBootstrapBrokers] = pc.Spec.BootstrapBrokers
 	}
 
-	tfProviderConfig := &kafka.Config{
-		BootstrapServers:        &brokers,
-		CACert:                  caCert,
-		ClientCert:              clientCert,
-		ClientCertKey:           clientKey,
-		ClientCertKeyPassphrase: clientKeyPassphrase,
-		SkipTLSVerify:           skipTlsVerify,
-		SASLUsername:            saslUsername,
-		SASLPassword:            saslPassword,
-		SASLMechanism:           saslMechanism,
-		TLSEnabled:              tlsEnabled,
-		Timeout:                 timeout,
+	// tls config
+	// creds
+	if cCaCert, ok := creds[keyXpCaCert].(string); ok {
+		//fmt.Println("Using ca cert from credentials")
+		tfConfig[keyTfCaCert] = cCaCert
+	}
+	if cClientCert, ok := creds[keyXpClientCert].(string); ok {
+		//fmt.Println("Using client cert from credentials")
+		tfConfig[keyTfClientCert] = cClientCert
+	}
+	if cClientKey, ok := creds[keyXpClientKey].(string); ok {
+		//fmt.Println("Using client key from credentials")
+		tfConfig[keyTfClientKey] = cClientKey
+	}
+	if cClientKeyPassphrase, ok := creds[keyXpClientKeyPassphrase].(string); ok {
+		//fmt.Println("Using client key passphrase from credentials")
+		tfConfig[keyTfClientKeyPassphrase] = cClientKeyPassphrase
+	}
+	if cSkipTlsVerify, ok := creds[keyXpSkipTlsVerify].(bool); ok {
+		//fmt.Println("Using skip tls verify from credentials")
+		tfConfig[keyTfSkipTlsVerify] = cSkipTlsVerify
+	}
+	if cTlsEnabled, ok := creds[keyXpTlsEnabled].(bool); ok {
+		//fmt.Println("Using tls enabled from credentials")
+		tfConfig[keyTfTlsEnabled] = cTlsEnabled
+	}
+	if pc.Spec.TlsConfig != nil {
+		// provider config
+		if pc.Spec.TlsConfig.CaCert != nil {
+			//fmt.Println("Using ca cert from provider config")
+			tfConfig[keyTfCaCert] = *pc.Spec.TlsConfig.CaCert
+		}
+		if pc.Spec.TlsConfig.ClientCert != nil {
+			//fmt.Println("Using client cert from provider config")
+			tfConfig[keyTfClientCert] = *pc.Spec.TlsConfig.ClientCert
+		}
+		if pc.Spec.TlsConfig.SkipTlsVerify != nil {
+			//fmt.Println("Using skip tls verify from provider config")
+			tfConfig[keyTfSkipTlsVerify] = *pc.Spec.TlsConfig.SkipTlsVerify
+		}
+		if pc.Spec.TlsConfig.TlsEnabled != nil {
+			//fmt.Println("Using tls enabled from provider config")
+			tfConfig[keyTfTlsEnabled] = *pc.Spec.TlsConfig.TlsEnabled
+		}
 	}
 
-	return &kafka.LazyClient{
-		Config: tfProviderConfig,
-	}, nil
+	// sasl
+	// creds
+	if cSaslUsername, ok := creds[keyXpSaslUsername].(string); ok {
+		//fmt.Println("Using sasl username from credentials")
+		tfConfig[keyTfSaslUsername] = cSaslUsername
+	}
+	if cSaslPassword, ok := creds[keyXpSaslPassword].(string); ok {
+		//fmt.Println("Using sasl password from credentials")
+		tfConfig[keyTfSaslPassword] = cSaslPassword
+	}
+	if cSaslMechanism, ok := creds[keyXpSaslMechanism].(string); ok {
+		//fmt.Println("Using sasl mechanism from credentials")
+		// terraform provider uses lowercase sasl mechanism, unlike most of the rest of the kafka ecosystem
+		tfConfig[keyTfSaslMechanism] = strings.ToLower(cSaslMechanism)
+	}
+
+	// provider config
+	if pc.Spec.SaslMechanism != nil {
+		//fmt.Println("Using sasl mechanism from provider config")
+		tfConfig[keyTfSaslMechanism] = strings.ToLower(*pc.Spec.SaslMechanism)
+	}
+
+	// timeout
+	if cTimeout, ok := creds[keyXpTimeout]; ok {
+		//fmt.Println("Using timeout from credentials")
+		tfConfig[keyTfTimeout] = cTimeout
+	}
+	if pc.Spec.Timeout != nil {
+		//fmt.Println("Using timeout from provider config")
+		tfConfig[keyTfTimeout] = *pc.Spec.Timeout
+	}
+
+	if brokers, ok := tfConfig[keyTfBootstrapBrokers].([]string); !ok || len(brokers) == 0 {
+		return nil, errors.New("no bootstrap brokers provided")
+	}
+
+	return tfConfig, nil
 }
