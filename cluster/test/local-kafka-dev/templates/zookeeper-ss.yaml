@@ -25,7 +25,7 @@ spec:
             - containerPort: 2181
           env:
             - name: KAFKA_OPTS
-              value: -Djava.security.auth.login.config=/config/zookeeper_server_jaas.conf -Dzookeeper.authProvider.1=org.apache.zookeeper.server.auth.SASLAuthenticationProvider -Dzookeeper.allowSaslFailedClients=false -Dzookeeper.requireClientAuthScheme=sasl
+              value: -Djava.security.auth.login.config=/config/zookeeper_server_jaas.conf -Dzookeeper.authProvider.0=org.apache.zookeeper.server.auth.SASLAuthenticationProvider -Dzookeeper.allowSaslFailedClients=true -Dzookeeper.requireClientAuthScheme=sasl
             - name: ZOOKEEPER_CLIENT_PORT
               value: "2181"
             - name: ZOOKEEPER_DATA_DIR

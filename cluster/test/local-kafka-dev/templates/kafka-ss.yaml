@@ -29,8 +29,8 @@ spec:
             value: "anonymous"
           - name: KAFKA_ADVERTISED_LISTENERS
             value: "INTERNAL://kafka.kafka.svc.cluster.local:9092"
-{{/*          - name: KAFKA_AUTHORIZER_CLASS_NAME*/}}
-{{/*            value: "org.apache.kafka.metadata.authorizer.StandardAuthorizer"*/}}
+          - name: KAFKA_AUTHORIZER_CLASS_NAME
+            value: "kafka.security.authorizer.AclAuthorizer"
           - name: KAFKA_ALLOW_EVERYONE_IF_NO_ACL_FOUND
             value: "true"
           - name: KAFKA_AUTO_CREATE_TOPICS_ENABLE
@@ -61,6 +61,8 @@ spec:
             value: "1"
           - name: KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR
             value: "1"
+          - name: KAFKA_ZOOKEEPER_SET_ACL
+            value: "true"
           - name: KAFKA_ZOOKEEPER_CONNECT
             value: zookeeper:2181
         resources: {}

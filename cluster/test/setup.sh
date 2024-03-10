@@ -8,7 +8,7 @@ helm upgrade kafka /home/matt/git/provider-upjet-kafka/cluster/test/local-kafka-
 
 echo "Setting kafka admin user password"
 
-kubectl exec -n kafka svc/kafka -- kafka-configs --zookeeper zookeeper:2181 --alter --add-config "SCRAM-SHA-256=[password=broker]" --entity-type users --entity-name broker
+kubectl exec -n kafka svc/kafka -- kafka-configs --zookeeper zookeeper:2181 --alter --add-config "SCRAM-SHA-256=[password=kafka]" --entity-type users --entity-name kafka
 kubectl exec -n kafka svc/kafka -- kafka-configs --zookeeper zookeeper:2181 --alter --add-config "SCRAM-SHA-256=[password=client-secret]" --entity-type users --entity-name client
 
 echo "Creating cloud credential secret..."

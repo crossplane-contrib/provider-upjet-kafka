@@ -7,9 +7,9 @@ data:
   kafka_server_jaas.conf: |
     KafkaServer {
        org.apache.kafka.common.security.scram.ScramLoginModule required
-       username="broker"
-       password="broker"
-       user_broker="broker"
+       username="kafka"
+       password="kafka"
+       user_broker="kafka"
        user_controlcenter="controlcenter-secret"
        user_schemaregistry="schemaregistry-secret"
        user_ksqldb="ksqldb-secret"
@@ -23,8 +23,7 @@ data:
        username="kafka"
        password="kafka";
     };
-  # These are probably unused
   client.properties: |
     sasl.mechanism=SCRAM-SHA-256
     security.protocol=SASL_PLAINTEXT
-    sasl.jaas.config=org.apache.kafka.common.security.scram.ScramLoginModule required username="client" password="client-secret";
+    sasl.jaas.config=org.apache.kafka.common.security.scram.ScramLoginModule required username="kafka" password="kafka";
