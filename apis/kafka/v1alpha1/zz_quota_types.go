@@ -21,12 +21,6 @@ type QuotaInitParameters struct {
 
 	// A map of string k/v properties.
 	Config map[string]float64 `json:"config,omitempty" tf:"config,omitempty"`
-
-	// The name of the entity
-	EntityName *string `json:"entityName,omitempty" tf:"entity_name,omitempty"`
-
-	// The type of the entity (client-id, user, ip)
-	EntityType *string `json:"entityType,omitempty" tf:"entity_type,omitempty"`
 }
 
 type QuotaObservation struct {
@@ -50,12 +44,12 @@ type QuotaParameters struct {
 	Config map[string]float64 `json:"config,omitempty" tf:"config,omitempty"`
 
 	// The name of the entity
-	// +kubebuilder:validation:Optional
-	EntityName *string `json:"entityName,omitempty" tf:"entity_name,omitempty"`
+	// +kubebuilder:validation:Required
+	EntityName *string `json:"entityName" tf:"entity_name,omitempty"`
 
 	// The type of the entity (client-id, user, ip)
-	// +kubebuilder:validation:Optional
-	EntityType *string `json:"entityType,omitempty" tf:"entity_type,omitempty"`
+	// +kubebuilder:validation:Required
+	EntityType *string `json:"entityType" tf:"entity_type,omitempty"`
 }
 
 // QuotaSpec defines the desired state of Quota
@@ -93,10 +87,8 @@ type QuotaStatus struct {
 type Quota struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
-	// +kubebuilder:validation:XValidation:rule="!('*' in self.managementPolicies || 'Create' in self.managementPolicies || 'Update' in self.managementPolicies) || has(self.forProvider.entityName) || (has(self.initProvider) && has(self.initProvider.entityName))",message="spec.forProvider.entityName is a required parameter"
-	// +kubebuilder:validation:XValidation:rule="!('*' in self.managementPolicies || 'Create' in self.managementPolicies || 'Update' in self.managementPolicies) || has(self.forProvider.entityType) || (has(self.initProvider) && has(self.initProvider.entityType))",message="spec.forProvider.entityType is a required parameter"
-	Spec   QuotaSpec   `json:"spec"`
-	Status QuotaStatus `json:"status,omitempty"`
+	Spec              QuotaSpec   `json:"spec"`
+	Status            QuotaStatus `json:"status,omitempty"`
 }
 
 // +kubebuilder:object:root=true

@@ -5,8 +5,6 @@ Copyright 2022 Upbound Inc.
 package config
 
 import (
-	"fmt"
-
 	"github.com/crossplane/upjet/pkg/config"
 )
 
@@ -18,7 +16,7 @@ var ExternalNameConfigs = map[string]config.ExternalName{
 	"kafka_topic": config.TemplatedStringAsIdentifier("", "{{ .parameters.name }}"),
 	"kafka_acl":   config.TemplatedStringAsIdentifier("", "{{ .parameters.acl_principal }}|{{ .parameters.acl_host }}|{{ .parameters.acl_operation }}|{{ .parameters.acl_permission_type }}|{{ .parameters.resource_type }}|{{ .parameters.resource_name }}|{{ .parameters.resource_pattern_type_filter }}"),
 	// I don't know what the id is. Let's find out.
-	"kafka_quota":                 config.IdentifierFromProvider,
+	"kafka_quota":                 config.TemplatedStringAsIdentifier("", "{{ .parameters.entity_name }}|{{ .parameters.entity_type }}"),
 	"kafka_user_scram_credential": config.IdentifierFromProvider,
 }
 
@@ -46,7 +44,6 @@ func ExternalNameConfigurations() config.ResourceOption {
 	return func(r *config.Resource) {
 		if e, ok := ExternalNameConfigs[r.Name]; ok {
 			r.ExternalName = e
-			fmt.Println(r.Name, r.ShouldUseNoForkClient())
 		}
 	}
 }

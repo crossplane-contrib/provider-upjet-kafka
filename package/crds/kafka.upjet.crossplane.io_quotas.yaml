@@ -77,6 +77,9 @@ spec:
                   entityType:
                     description: The type of the entity (client-id, user, ip)
                     type: string
+                required:
+                - entityName
+                - entityType
                 type: object
               initProvider:
                 description: THIS IS A BETA FIELD. It will be honored unless the Management
@@ -95,12 +98,6 @@ spec:
                       type: number
                     description: A map of string k/v properties.
                     type: object
-                  entityName:
-                    description: The name of the entity
-                    type: string
-                  entityType:
-                    description: The type of the entity (client-id, user, ip)
-                    type: string
                 type: object
               managementPolicies:
                 default:
@@ -262,15 +259,6 @@ spec:
             required:
             - forProvider
             type: object
-            x-kubernetes-validations:
-            - message: spec.forProvider.entityName is a required parameter
-              rule: '!(''*'' in self.managementPolicies || ''Create'' in self.managementPolicies
-                || ''Update'' in self.managementPolicies) || has(self.forProvider.entityName)
-                || (has(self.initProvider) && has(self.initProvider.entityName))'
-            - message: spec.forProvider.entityType is a required parameter
-              rule: '!(''*'' in self.managementPolicies || ''Create'' in self.managementPolicies
-                || ''Update'' in self.managementPolicies) || has(self.forProvider.entityType)
-                || (has(self.initProvider) && has(self.initProvider.entityType))'
           status:
             description: QuotaStatus defines the observed state of Quota.
             properties:
