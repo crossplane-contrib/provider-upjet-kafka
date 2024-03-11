@@ -37,11 +37,7 @@ func GetProvider() *ujconfig.Provider {
 			GroupKindOverrides(),
 		))
 
-	for _, configure := range []func(provider *ujconfig.Provider){
-		// add custom config functions
-	} {
-		configure(pc)
-	}
+	Configure(pc)
 
 	pc.ConfigureResources()
 	return pc

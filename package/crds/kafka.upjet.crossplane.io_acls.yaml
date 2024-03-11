@@ -67,19 +67,28 @@ spec:
               forProvider:
                 properties:
                   aclHost:
+                    description: The host from which the ACL principal will have access.
                     type: string
                   aclOperation:
+                    description: The operation that is being allowed or denied.
                     type: string
                   aclPermissionType:
+                    description: The type of permission. One of Unknown, Any, Allow,
+                      Deny.
                     type: string
                   aclPrincipal:
+                    description: The principal to which the ACL applies.
                     type: string
                   resourceName:
-                    description: The name of the resource
+                    description: The name of the resource to which the ACL applies.
                     type: string
                   resourcePatternTypeFilter:
+                    description: The pattern type of the resource. One of Any, Match,
+                      Literal, Prefixed.
                     type: string
                   resourceType:
+                    description: The type of resource. One of Unknown, Any, Topic,
+                      Group, Cluster, TransactionalID.
                     type: string
                 required:
                 - aclHost
@@ -267,21 +276,30 @@ spec:
               atProvider:
                 properties:
                   aclHost:
+                    description: The host from which the ACL principal will have access.
                     type: string
                   aclOperation:
+                    description: The operation that is being allowed or denied.
                     type: string
                   aclPermissionType:
+                    description: The type of permission. One of Unknown, Any, Allow,
+                      Deny.
                     type: string
                   aclPrincipal:
+                    description: The principal to which the ACL applies.
                     type: string
                   id:
                     type: string
                   resourceName:
-                    description: The name of the resource
+                    description: The name of the resource to which the ACL applies.
                     type: string
                   resourcePatternTypeFilter:
+                    description: The pattern type of the resource. One of Any, Match,
+                      Literal, Prefixed.
                     type: string
                   resourceType:
+                    description: The type of resource. One of Unknown, Any, Topic,
+                      Group, Cluster, TransactionalID.
                     type: string
                 type: object
               conditions:

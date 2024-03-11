@@ -21,45 +21,58 @@ type ACLInitParameters struct {
 }
 
 type ACLObservation struct {
+
+	// The host from which the ACL principal will have access.
 	ACLHost *string `json:"aclHost,omitempty" tf:"acl_host,omitempty"`
 
+	// The operation that is being allowed or denied.
 	ACLOperation *string `json:"aclOperation,omitempty" tf:"acl_operation,omitempty"`
 
+	// The type of permission. One of Unknown, Any, Allow, Deny.
 	ACLPermissionType *string `json:"aclPermissionType,omitempty" tf:"acl_permission_type,omitempty"`
 
+	// The principal to which the ACL applies.
 	ACLPrincipal *string `json:"aclPrincipal,omitempty" tf:"acl_principal,omitempty"`
 
 	ID *string `json:"id,omitempty" tf:"id,omitempty"`
 
-	// The name of the resource
+	// The name of the resource to which the ACL applies.
 	ResourceName *string `json:"resourceName,omitempty" tf:"resource_name,omitempty"`
 
+	// The pattern type of the resource. One of Any, Match, Literal, Prefixed.
 	ResourcePatternTypeFilter *string `json:"resourcePatternTypeFilter,omitempty" tf:"resource_pattern_type_filter,omitempty"`
 
+	// The type of resource. One of Unknown, Any, Topic, Group, Cluster, TransactionalID.
 	ResourceType *string `json:"resourceType,omitempty" tf:"resource_type,omitempty"`
 }
 
 type ACLParameters struct {
 
+	// The host from which the ACL principal will have access.
 	// +kubebuilder:validation:Required
 	ACLHost *string `json:"aclHost" tf:"acl_host,omitempty"`
 
+	// The operation that is being allowed or denied.
 	// +kubebuilder:validation:Required
 	ACLOperation *string `json:"aclOperation" tf:"acl_operation,omitempty"`
 
+	// The type of permission. One of Unknown, Any, Allow, Deny.
 	// +kubebuilder:validation:Required
 	ACLPermissionType *string `json:"aclPermissionType" tf:"acl_permission_type,omitempty"`
 
+	// The principal to which the ACL applies.
 	// +kubebuilder:validation:Required
 	ACLPrincipal *string `json:"aclPrincipal" tf:"acl_principal,omitempty"`
 
-	// The name of the resource
+	// The name of the resource to which the ACL applies.
 	// +kubebuilder:validation:Required
 	ResourceName *string `json:"resourceName" tf:"resource_name,omitempty"`
 
+	// The pattern type of the resource. One of Any, Match, Literal, Prefixed.
 	// +kubebuilder:validation:Optional
 	ResourcePatternTypeFilter *string `json:"resourcePatternTypeFilter,omitempty" tf:"resource_pattern_type_filter,omitempty"`
 
+	// The type of resource. One of Unknown, Any, Topic, Group, Cluster, TransactionalID.
 	// +kubebuilder:validation:Required
 	ResourceType *string `json:"resourceType" tf:"resource_type,omitempty"`
 }

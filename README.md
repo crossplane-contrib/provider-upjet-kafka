@@ -46,7 +46,7 @@ Example credentials json with all options filled:
 
 ```json
 {
-  bootstrapBrokers: [
+  "bootstrapBrokers": [
     "broker1:9092",
     "broker2:9092"
   ],
