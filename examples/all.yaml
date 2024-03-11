@@ -1,3 +1,25 @@
+apiVersion: kafka.upjet.crossplane.io/v1alpha1
+kind: UserScramCredential
+metadata:
+  name: user-all
+spec:
+  forProvider:
+    username: user-all
+    scramMechanism: SCRAM-SHA-256
+    passwordSecretRef:
+      name: user-all-secret
+      namespace: upbound-system
+      key: password
+
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: user-all-secret
+  namespace: upbound-system
+type: Opaque
+stringData:
+  password: "wrongcowgeneratorgluestick"
 ---
 apiVersion: kafka.upjet.crossplane.io/v1alpha1
 kind: Topic
@@ -5,7 +27,7 @@ metadata:
   name: example
 spec:
   forProvider:
-    name: event.user.update
+    name: event.domain.created
     replicationFactor: 1
     partitions: 2
     config:
@@ -18,7 +40,7 @@ metadata:
   name: example
 spec:
   forProvider:
-    entityName: user2
+    entityName: user-all
     entityType: user
     config:
       consumer_byte_rate: 5000000
@@ -40,13 +62,12 @@ spec:
 apiVersion: kafka.upjet.crossplane.io/v1alpha1
 kind: ACL
 metadata:
-  name: allow-all
+  name: allow-publish-topic
 spec:
   forProvider:
-    resourceName: "*"
+    resourceName: event.domain.created
     resourceType: Topic
-    resourcePatternTypeFilter: Any
-    aclPrincipal: User:user1
+    aclPrincipal: User:user-all
     aclHost: "*"
-    aclOperation: All
-    aclPermissionType: Any
+    aclOperation: Write
+    aclPermissionType: Allow
