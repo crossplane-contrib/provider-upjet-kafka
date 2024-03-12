@@ -127,6 +127,7 @@ spec:
                   client.
                 type: integer
               tls:
+                description: TLSConfig configures tls parameters
                 properties:
                   caCert:
                     description: CA Certificate to validate the server's certificate
