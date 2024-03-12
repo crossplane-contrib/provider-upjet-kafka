@@ -38,8 +38,8 @@ const (
 	keyTfSaslUsername          = "sasl_username"
 	keyTfSaslPassword          = "sasl_password"
 	keyTfSaslMechanism         = "sasl_mechanism"
-	keyTfSkipTlsVerify         = "skip_tls_verify"
-	keyTfTlsEnabled            = "tls_enabled"
+	keyTfSkipTLSVerify         = "skip_tls_verify"
+	keyTfTLSEnabled            = "tls_enabled"
 	keyTfTimeout               = "timeout"
 	keyXpBootstrapBrokers      = "bootstrapBrokers"
 	keyXpBootstrapBrokerString = "bootstrapBrokerString"
@@ -50,8 +50,8 @@ const (
 	keyXpSaslUsername          = "saslUsername"
 	keyXpSaslPassword          = "saslPassword"
 	keyXpSaslMechanism         = "saslMechanism"
-	keyXpSkipTlsVerify         = "skipTlsVerify"
-	keyXpTlsEnabled            = "tlsEnabled"
+	keyXpSkipTLSVerify         = "skipTlsVerify"
+	keyXpTLSEnabled            = "tlsEnabled"
 	keyXpTimeout               = "timeout"
 )
 
@@ -161,31 +161,31 @@ func parseToTfConfig(ctx context.Context, creds map[string]any, pc *v1beta1.Prov
 		//fmt.Println("Using client key passphrase from credentials")
 		tfConfig[keyTfClientKeyPassphrase] = cClientKeyPassphrase
 	}
-	if cSkipTlsVerify, ok := creds[keyXpSkipTlsVerify].(bool); ok {
+	if cSkipTLSVerify, ok := creds[keyXpSkipTLSVerify].(bool); ok {
 		//fmt.Println("Using skip tls verify from credentials")
-		tfConfig[keyTfSkipTlsVerify] = cSkipTlsVerify
+		tfConfig[keyTfSkipTLSVerify] = cSkipTLSVerify
 	}
-	if cTlsEnabled, ok := creds[keyXpTlsEnabled].(bool); ok {
+	if cTLSEnabled, ok := creds[keyXpTLSEnabled].(bool); ok {
 		//fmt.Println("Using tls enabled from credentials")
-		tfConfig[keyTfTlsEnabled] = cTlsEnabled
+		tfConfig[keyTfTLSEnabled] = cTLSEnabled
 	}
-	if pc.Spec.TlsConfig != nil {
+	if pc.Spec.TLSConfig != nil {
 		// provider config
-		if pc.Spec.TlsConfig.CaCert != nil {
+		if pc.Spec.TLSConfig.CaCert != nil {
 			//fmt.Println("Using ca cert from provider config")
-			tfConfig[keyTfCaCert] = *pc.Spec.TlsConfig.CaCert
+			tfConfig[keyTfCaCert] = *pc.Spec.TLSConfig.CaCert
 		}
-		if pc.Spec.TlsConfig.ClientCert != nil {
+		if pc.Spec.TLSConfig.ClientCert != nil {
 			//fmt.Println("Using client cert from provider config")
-			tfConfig[keyTfClientCert] = *pc.Spec.TlsConfig.ClientCert
+			tfConfig[keyTfClientCert] = *pc.Spec.TLSConfig.ClientCert
 		}
-		if pc.Spec.TlsConfig.SkipTlsVerify != nil {
+		if pc.Spec.TLSConfig.SkipTLSVerify != nil {
 			//fmt.Println("Using skip tls verify from provider config")
-			tfConfig[keyTfSkipTlsVerify] = *pc.Spec.TlsConfig.SkipTlsVerify
+			tfConfig[keyTfSkipTLSVerify] = *pc.Spec.TLSConfig.SkipTLSVerify
 		}
-		if pc.Spec.TlsConfig.TlsEnabled != nil {
+		if pc.Spec.TLSConfig.TLSEnabled != nil {
 			//fmt.Println("Using tls enabled from provider config")
-			tfConfig[keyTfTlsEnabled] = *pc.Spec.TlsConfig.TlsEnabled
+			tfConfig[keyTfTLSEnabled] = *pc.Spec.TLSConfig.TLSEnabled
 		}
 	}
 

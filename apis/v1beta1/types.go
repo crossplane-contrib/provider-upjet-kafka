@@ -34,11 +34,12 @@ type ProviderConfigSpec struct {
 	// +optional
 	Timeout *int `json:"timeout,omitempty"`
 
+	// TLSConfig
 	// +optional
-	TlsConfig *TlsConfig `json:"tls,omitempty"`
+	TLSConfig *TLSConfig `json:"tls,omitempty"`
 }
 
-type TlsConfig struct {
+type TLSConfig struct {
 	// CA Certificate to validate the server's certificate
 	// +optional
 	CaCert *string `json:"caCert,omitempty"`
@@ -47,10 +48,10 @@ type TlsConfig struct {
 	ClientCert *string `json:"clientCert,omitempty"`
 	// Enable communications with the target kafka cluster over TLS
 	// +optional
-	TlsEnabled *bool `json:"tlsEnabled,omitempty"`
+	TLSEnabled *bool `json:"tlsEnabled,omitempty"`
 	// Disable basic TLS verification. This should only be true if the kafka server is an insecure development instance.
 	// +optional
-	SkipTlsVerify *bool `json:"skipTlsVerify,omitempty"`
+	SkipTLSVerify *bool `json:"skipTlsVerify,omitempty"`
 }
 
 // ProviderCredentials required to authenticate.
