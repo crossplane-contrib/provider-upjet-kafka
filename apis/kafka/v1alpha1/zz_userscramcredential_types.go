@@ -21,12 +21,6 @@ type UserScramCredentialInitParameters struct {
 
 	// The number of SCRAM iterations used when generating the credential
 	ScramIterations *int64 `json:"scramIterations,omitempty" tf:"scram_iterations,omitempty"`
-
-	// The SCRAM mechanism used to generate the credential (SCRAM-SHA-256, SCRAM-SHA-512)
-	ScramMechanism *string `json:"scramMechanism,omitempty" tf:"scram_mechanism,omitempty"`
-
-	// The name of the credential
-	Username *string `json:"username,omitempty" tf:"username,omitempty"`
 }
 
 type UserScramCredentialObservation struct {
@@ -53,12 +47,12 @@ type UserScramCredentialParameters struct {
 	ScramIterations *int64 `json:"scramIterations,omitempty" tf:"scram_iterations,omitempty"`
 
 	// The SCRAM mechanism used to generate the credential (SCRAM-SHA-256, SCRAM-SHA-512)
-	// +kubebuilder:validation:Optional
-	ScramMechanism *string `json:"scramMechanism,omitempty" tf:"scram_mechanism,omitempty"`
+	// +kubebuilder:validation:Required
+	ScramMechanism *string `json:"scramMechanism" tf:"scram_mechanism,omitempty"`
 
 	// The name of the credential
-	// +kubebuilder:validation:Optional
-	Username *string `json:"username,omitempty" tf:"username,omitempty"`
+	// +kubebuilder:validation:Required
+	Username *string `json:"username" tf:"username,omitempty"`
 }
 
 // UserScramCredentialSpec defines the desired state of UserScramCredential
@@ -97,8 +91,6 @@ type UserScramCredential struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 	// +kubebuilder:validation:XValidation:rule="!('*' in self.managementPolicies || 'Create' in self.managementPolicies || 'Update' in self.managementPolicies) || has(self.forProvider.passwordSecretRef)",message="spec.forProvider.passwordSecretRef is a required parameter"
-	// +kubebuilder:validation:XValidation:rule="!('*' in self.managementPolicies || 'Create' in self.managementPolicies || 'Update' in self.managementPolicies) || has(self.forProvider.scramMechanism) || (has(self.initProvider) && has(self.initProvider.scramMechanism))",message="spec.forProvider.scramMechanism is a required parameter"
-	// +kubebuilder:validation:XValidation:rule="!('*' in self.managementPolicies || 'Create' in self.managementPolicies || 'Update' in self.managementPolicies) || has(self.forProvider.username) || (has(self.initProvider) && has(self.initProvider.username))",message="spec.forProvider.username is a required parameter"
 	Spec   UserScramCredentialSpec   `json:"spec"`
 	Status UserScramCredentialStatus `json:"status,omitempty"`
 }

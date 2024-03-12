@@ -6,6 +6,7 @@ package config
 
 import (
 	"github.com/crossplane/upjet/pkg/config"
+	"strings"
 )
 
 // ExternalNameConfigs contains all external name configurations for this
@@ -13,11 +14,17 @@ import (
 var ExternalNameConfigs = map[string]config.ExternalName{
 	// Don't rely on metadata.name as the name of the topic, because managed resources are cluster-scoped
 	// so MRs for topics on multiple clusters could have a name collision.
-	"kafka_topic": config.TemplatedStringAsIdentifier("", "{{ .parameters.name }}"),
-	"kafka_acl":   config.TemplatedStringAsIdentifier("", "{{ .parameters.acl_principal }}|{{ .parameters.acl_host }}|{{ .parameters.acl_operation }}|{{ .parameters.acl_permission_type }}|{{ .parameters.resource_type }}|{{ .parameters.resource_name }}|{{ .parameters.resource_pattern_type_filter }}"),
-	// I don't know what the id is. Let's find out.
-	"kafka_quota":                 config.TemplatedStringAsIdentifier("", "{{ .parameters.entity_name }}|{{ .parameters.entity_type }}"),
-	"kafka_user_scram_credential": config.IdentifierFromProvider,
+	"kafka_topic":                 PipeSeparatedParametersAsIdentifier("name"),
+	"kafka_acl":                   PipeSeparatedParametersAsIdentifier("acl_principal", "acl_host", "acl_operation", "acl_permission_type", "resource_type", "resource_name", "resource_pattern_type_filter"),
+	"kafka_quota":                 PipeSeparatedParametersAsIdentifier("entity_name", "entity_type"),
+	"kafka_user_scram_credential": PipeSeparatedParametersAsIdentifier("username", "scram_mechanism"),
+}
+
+func PipeSeparatedParametersAsIdentifier(params ...string) config.ExternalName {
+	template := "{{ .parameters." + strings.Join(params, " }}|{{ .parameters.") + " }}"
+	en := config.TemplatedStringAsIdentifier("", template)
+	en.DisableNameInitializer = true
+	return en
 }
 
 func GroupKindOverrides() config.ResourceOption {
@@ -30,7 +37,8 @@ func GroupKindOverrides() config.ResourceOption {
 }
 
 // NoAsync disables the async-by-default behavior of upjet. Unlike many resources in cloud providers, Kafka resources
-// are fast to create. None of them need to be done asynchronously.
+// are fast to create. None of them need to be done asynchronously. However, it seems that upjet has much better
+// error handling when running in async mode, so we may to be async just for that reason.
 func NoAsync() config.ResourceOption {
 	return func(r *config.Resource) {
 		r.UseAsync = false
