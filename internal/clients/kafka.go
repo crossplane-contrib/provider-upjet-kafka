@@ -91,7 +91,7 @@ func TerraformSetupBuilder(version, providerSource, providerVersion string, ujpr
 		}
 
 		// Merge the ProviderConfig and credentials into a configuration map for the Terraform provider.
-		tfConfig, err := parseToTfConfig(ctx, creds, pc)
+		tfConfig, err := parseToTfConfig(creds, pc)
 		if err != nil {
 			return ps, errors.Wrap(err, "failed to parse credentials to terraform configuration")
 		}
@@ -112,19 +112,20 @@ func TerraformSetupBuilder(version, providerSource, providerVersion string, ujpr
 	}
 }
 
-func parseToTfConfig(ctx context.Context, creds map[string]any, pc *v1beta1.ProviderConfig) (map[string]any, error) {
+//nolint:gocyclo
+func parseToTfConfig(creds map[string]any, pc *v1beta1.ProviderConfig) (map[string]any, error) {
 	tfConfig := make(map[string]any)
 
 	// brokers
 	// First read from creds string, then from creds array, then from provider config. Last one takes precedence.
 	sBrokers, ok := creds[keyXpBootstrapBrokerString].(string)
 	if ok && sBrokers != "" {
-		//fmt.Println("Using bootstrap broker string from credentials")
+		// fmt.Println("Using bootstrap broker string from credentials")
 		tfConfig[keyTfBootstrapBrokers] = strings.Split(sBrokers, ",")
 	}
 	iCredsBrokers, ok := creds[keyXpBootstrapBrokers].([]interface{})
 	if ok && iCredsBrokers != nil {
-		//fmt.Println("Using bootstrap brokers from credentials")
+		// fmt.Println("Using bootstrap brokers from credentials")
 		brokers := make([]string, len(iCredsBrokers))
 		for idx, ifce := range iCredsBrokers {
 			if ifce != nil {
@@ -135,56 +136,56 @@ func parseToTfConfig(ctx context.Context, creds map[string]any, pc *v1beta1.Prov
 	}
 
 	if pcBrokerString := pc.Spec.BootstrapBrokerString; pcBrokerString != nil {
-		//fmt.Println("Using bootstrap broker string from provider config")
+		// fmt.Println("Using bootstrap broker string from provider config")
 		tfConfig[keyTfBootstrapBrokers] = strings.Split(*pcBrokerString, ",")
 	}
 	if pcBrokers := pc.Spec.BootstrapBrokers; pcBrokers != nil {
-		//fmt.Println("Using bootstrap brokers from provider config")
+		// fmt.Println("Using bootstrap brokers from provider config")
 		tfConfig[keyTfBootstrapBrokers] = pc.Spec.BootstrapBrokers
 	}
 
 	// tls config
 	// creds
 	if cCaCert, ok := creds[keyXpCaCert].(string); ok {
-		//fmt.Println("Using ca cert from credentials")
+		// fmt.Println("Using ca cert from credentials")
 		tfConfig[keyTfCaCert] = cCaCert
 	}
 	if cClientCert, ok := creds[keyXpClientCert].(string); ok {
-		//fmt.Println("Using client cert from credentials")
+		// fmt.Println("Using client cert from credentials")
 		tfConfig[keyTfClientCert] = cClientCert
 	}
 	if cClientKey, ok := creds[keyXpClientKey].(string); ok {
-		//fmt.Println("Using client key from credentials")
+		// fmt.Println("Using client key from credentials")
 		tfConfig[keyTfClientKey] = cClientKey
 	}
 	if cClientKeyPassphrase, ok := creds[keyXpClientKeyPassphrase].(string); ok {
-		//fmt.Println("Using client key passphrase from credentials")
+		// fmt.Println("Using client key passphrase from credentials")
 		tfConfig[keyTfClientKeyPassphrase] = cClientKeyPassphrase
 	}
 	if cSkipTLSVerify, ok := creds[keyXpSkipTLSVerify].(bool); ok {
-		//fmt.Println("Using skip tls verify from credentials")
+		// fmt.Println("Using skip tls verify from credentials")
 		tfConfig[keyTfSkipTLSVerify] = cSkipTLSVerify
 	}
 	if cTLSEnabled, ok := creds[keyXpTLSEnabled].(bool); ok {
-		//fmt.Println("Using tls enabled from credentials")
+		// fmt.Println("Using tls enabled from credentials")
 		tfConfig[keyTfTLSEnabled] = cTLSEnabled
 	}
 	if pc.Spec.TLSConfig != nil {
 		// provider config
 		if pc.Spec.TLSConfig.CaCert != nil {
-			//fmt.Println("Using ca cert from provider config")
+			// fmt.Println("Using ca cert from provider config")
 			tfConfig[keyTfCaCert] = *pc.Spec.TLSConfig.CaCert
 		}
 		if pc.Spec.TLSConfig.ClientCert != nil {
-			//fmt.Println("Using client cert from provider config")
+			// fmt.Println("Using client cert from provider config")
 			tfConfig[keyTfClientCert] = *pc.Spec.TLSConfig.ClientCert
 		}
 		if pc.Spec.TLSConfig.SkipTLSVerify != nil {
-			//fmt.Println("Using skip tls verify from provider config")
+			// fmt.Println("Using skip tls verify from provider config")
 			tfConfig[keyTfSkipTLSVerify] = *pc.Spec.TLSConfig.SkipTLSVerify
 		}
 		if pc.Spec.TLSConfig.TLSEnabled != nil {
-			//fmt.Println("Using tls enabled from provider config")
+			// fmt.Println("Using tls enabled from provider config")
 			tfConfig[keyTfTLSEnabled] = *pc.Spec.TLSConfig.TLSEnabled
 		}
 	}
@@ -192,32 +193,32 @@ func parseToTfConfig(ctx context.Context, creds map[string]any, pc *v1beta1.Prov
 	// sasl
 	// creds
 	if cSaslUsername, ok := creds[keyXpSaslUsername].(string); ok {
-		//fmt.Println("Using sasl username from credentials")
+		// fmt.Println("Using sasl username from credentials")
 		tfConfig[keyTfSaslUsername] = cSaslUsername
 	}
 	if cSaslPassword, ok := creds[keyXpSaslPassword].(string); ok {
-		//fmt.Println("Using sasl password from credentials")
+		// fmt.Println("Using sasl password from credentials")
 		tfConfig[keyTfSaslPassword] = cSaslPassword
 	}
 	if cSaslMechanism, ok := creds[keyXpSaslMechanism].(string); ok {
-		//fmt.Println("Using sasl mechanism from credentials")
+		// fmt.Println("Using sasl mechanism from credentials")
 		// terraform provider uses lowercase sasl mechanism, unlike most of the rest of the kafka ecosystem
 		tfConfig[keyTfSaslMechanism] = strings.ToLower(cSaslMechanism)
 	}
 
 	// provider config
 	if pc.Spec.SaslMechanism != nil {
-		//fmt.Println("Using sasl mechanism from provider config")
+		// fmt.Println("Using sasl mechanism from provider config")
 		tfConfig[keyTfSaslMechanism] = strings.ToLower(*pc.Spec.SaslMechanism)
 	}
 
 	// timeout
 	if cTimeout, ok := creds[keyXpTimeout]; ok {
-		//fmt.Println("Using timeout from credentials")
+		// fmt.Println("Using timeout from credentials")
 		tfConfig[keyTfTimeout] = cTimeout
 	}
 	if pc.Spec.Timeout != nil {
-		//fmt.Println("Using timeout from provider config")
+		// fmt.Println("Using timeout from provider config")
 		tfConfig[keyTfTimeout] = *pc.Spec.Timeout
 	}
 

@@ -27,13 +27,15 @@ var providerMetadata string
 func GetProvider() *ujconfig.Provider {
 	pc := ujconfig.NewProvider([]byte(providerSchema), resourcePrefix, modulePath, []byte(providerMetadata),
 		ujconfig.WithRootGroup("upjet.crossplane.io"),
-		//ujconfig.WithIncludeList(ExternalNameConfigured()),
+		// ujconfig.WithIncludeList(ExternalNameConfigured()),
 		ujconfig.WithNoForkIncludeList(ExternalNameConfigured()),
 		ujconfig.WithFeaturesPackage("internal/features"),
 		ujconfig.WithTerraformProvider(kafka.Provider()),
 		ujconfig.WithDefaultResourceOptions(
 			ExternalNameConfigurations(),
-			//NoAsync(),
+			// This provider would be fine with synchronous resources, but upjet doesn't handle errors properly
+			// when async=false
+			// NoAsync(),
 			GroupKindOverrides(),
 		))
 

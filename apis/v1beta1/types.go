@@ -34,11 +34,12 @@ type ProviderConfigSpec struct {
 	// +optional
 	Timeout *int `json:"timeout,omitempty"`
 
-	// TLSConfig
+	// TLSConfig configures tls parameters
 	// +optional
 	TLSConfig *TLSConfig `json:"tls,omitempty"`
 }
 
+// TLSConfig configures tls parameters
 type TLSConfig struct {
 	// CA Certificate to validate the server's certificate
 	// +optional

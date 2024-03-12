@@ -4,6 +4,7 @@ import (
 	"github.com/crossplane/upjet/pkg/config"
 )
 
+// Configure adds custom configuration for all the terraform resources managed by this provider.
 func Configure(p *config.Provider) {
 	p.AddResourceConfigurator("kafka_acl", func(r *config.Resource) {
 		r.TerraformResource.Description = "The ACL resource allows a user to manage ACLs for Kafka."

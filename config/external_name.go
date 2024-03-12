@@ -11,7 +11,8 @@ import (
 )
 
 // ExternalNameConfigs contains all external name configurations for this
-// provider.
+// provider. Every one of them is based entirely on the parameters, so even when observing existing resources,
+// you should never need to set the external-name annotation manually.
 var ExternalNameConfigs = map[string]config.ExternalName{
 	// Don't rely on metadata.name as the name of the topic, because managed resources are cluster-scoped
 	// so MRs for topics on multiple clusters could have a name collision.
@@ -21,6 +22,9 @@ var ExternalNameConfigs = map[string]config.ExternalName{
 	"kafka_user_scram_credential": PipeSeparatedParametersAsIdentifier("username", "scram_mechanism"),
 }
 
+// PipeSeparatedParametersAsIdentifier configures the external-name config for each resource in this provider to use a
+// value for both its terraform id and external name that consists of the relevant kafka query api parameters, separated
+// by pipe characters (|).
 func PipeSeparatedParametersAsIdentifier(params ...string) config.ExternalName {
 	template := "{{ .parameters." + strings.Join(params, " }}|{{ .parameters.") + " }}"
 	en := config.TemplatedStringAsIdentifier("", template)
@@ -28,6 +32,7 @@ func PipeSeparatedParametersAsIdentifier(params ...string) config.ExternalName {
 	return en
 }
 
+// GroupKindOverrides keeps all four resources in this small provider in a single group.
 func GroupKindOverrides() config.ResourceOption {
 	return func(r *config.Resource) {
 		if r.Name == "kafka_user_scram_credential" {
