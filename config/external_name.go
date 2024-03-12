@@ -5,8 +5,9 @@ Copyright 2022 Upbound Inc.
 package config
 
 import (
-	"github.com/crossplane/upjet/pkg/config"
 	"strings"
+
+	"github.com/crossplane/upjet/pkg/config"
 )
 
 // ExternalNameConfigs contains all external name configurations for this
